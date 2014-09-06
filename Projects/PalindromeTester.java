@@ -26,7 +26,7 @@ public class PalindromeTester {
             if (equals) {
                 System.out.println("That string IS a palindrome.");
             } else {
-                System.out.println("That string IS a palindrome.");
+                System.out.println("That string IS NOT a palindrome.");
             }
 
             System.out.println();
