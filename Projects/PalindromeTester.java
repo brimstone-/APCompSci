@@ -1,5 +1,5 @@
 /**
- * 1.2 Charge Account Statement
+ * 1.4 PalindromeTester
  *
  * @author Matthew Cheng
  * @version  9/6
@@ -28,7 +28,7 @@ public class PalindromeTester {
             } else {
                 System.out.println("That string IS a palindrome.");
             }
-            
+
             System.out.println();
             System.out.print("Test another palindrome (y/n)? ");
             another = sc.nextLine();

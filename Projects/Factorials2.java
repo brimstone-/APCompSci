@@ -1,5 +1,5 @@
 /**
- *  1.3 Factorials
+ * 1.3 Factorials
  *
  * @author Matthew Cheng
  * @version 9/3
