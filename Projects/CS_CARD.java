@@ -1,7 +1,7 @@
 /**
  * 1.2 Charge Account Statement
  * 
- * @author Matthew Cheng 
+ * @author Matthew Cheng
  * @version  9/3
  */
 
