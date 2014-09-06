@@ -17,11 +17,16 @@ public class PalindromeTester {
             input = sc.nextLine();
 
             reverse = new StringBuilder(input).reverse().toString();
-            reverse = input.replaceAll("[\\W]", "");
+            reverse = reverse.replaceAll("[^a-zA-Z ]", "").toLowerCase();
+            reverse = reverse.replaceAll("[\\W]", "");
+            input = input.replaceAll("[^a-zA-Z ]", "").toLowerCase();
+            input  = input.replaceAll("[\\W]", "");
 
+            boolean equals = input.equalsIgnoreCase(reverse);
+            
             System.out.println();
 
-            if (boolean equals = input.equalsIgnoreCase(reverse)) {
+            if (equals) {
                 System.out.println("That string IS a palindrome.");
             } else {
                 System.out.println("That string IS NOT a palindrome.");
