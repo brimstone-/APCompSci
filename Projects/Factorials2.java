@@ -21,10 +21,10 @@ public class Factorials2
         }while (nbr < 0);
     	System.out.println(nbr + "! = " + factorial(nbr));
     }
-    public static int factorial(int a)
+    public static int factorial(int x)
     {
-        if (a > 1)
-            return (a * factorial (a-1));
+        if (x > 1)
+            return (x * factorial (x-1));
         else
             return 1;
     }
