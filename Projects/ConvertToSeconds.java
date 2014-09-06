@@ -1,6 +1,8 @@
 /**
+ * 1.1 ConvertToSeconds
+ *
  * @author Matthew Cheng
- * @date 8/28
+ * @version  8/28
  */
 
 import java.util.Scanner;
