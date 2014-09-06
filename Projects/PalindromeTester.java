@@ -11,10 +11,11 @@ public class PalindromeTester {
     public static void main (String [] args) {
         String input, reverse, another = "y";
         Scanner sc = new Scanner (System.in);
-        while (another.equalsIgnoreCase("y")) { // allows y or Y
+        while (another.equalsIgnoreCase("y")) {
             System.out.print("Please enter a potential palindrome: ");
             input = sc.nextLine();
             reverse = new StringBuilder(input).reverse().toString();
+            reverse = input.replaceAll("[\\W]", "");
             boolean equals = input.equalsIgnoreCase(reverse);
             System.out.println();
             if (equals) {
