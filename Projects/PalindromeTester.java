@@ -19,11 +19,9 @@ public class PalindromeTester {
             reverse = new StringBuilder(input).reverse().toString();
             reverse = input.replaceAll("[\\W]", "");
 
-            boolean equals = input.equalsIgnoreCase(reverse);
-
             System.out.println();
 
-            if (equals) {
+            if (boolean equals = input.equalsIgnoreCase(reverse)) {
                 System.out.println("That string IS a palindrome.");
             } else {
                 System.out.println("That string IS NOT a palindrome.");
