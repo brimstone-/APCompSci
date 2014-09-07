@@ -26,17 +26,18 @@ public class BaseballStats {
     //-------------------------------------------------
 
     public static void main (String[] args) throws IOException {
-        Scanner fileScan, lineScan;
-        String fileName, player;
-        Scanner scan = new Scanner(System.in);
+        Scanner fileScan, lineScan, scan;
+        String fileName, firstName, lastName;
+        scan = new Scanner(System.in);
         System.out.print ("Enter the name of the input file: ");
 
         fileName = scan.nextLine();
-        fileScan = new Scanner(new File(fileName));
+        fileScan = new Scanner (new File(fileName));
 
         while (fileScan.hasNext()) {
-        	player = scan.nextLine();
-        	System.out.println("Name: " + player);
+        	firstName = fileScan.next();
+            lastName = fileScan.next();
+        	System.out.println("Name: " + firstName + " " + lastName);
         }
     }
 }

@@ -23,7 +23,7 @@ public class PalindromeTester {
             input  = input.replaceAll("[\\W]", "");
 
             boolean equals = input.equalsIgnoreCase(reverse);
-            
+
             System.out.println();
 
             if (equals) {
