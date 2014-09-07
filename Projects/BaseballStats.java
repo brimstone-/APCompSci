@@ -14,14 +14,17 @@
 //   w for walk, s for sacrifice.  Statistics are computed and
 //   printed for each player.
 // ****************************************************************
+
 import java.util.Scanner;
 import java.io.*;
 public class BaseballStats {
+
     //-------------------------------------------------
     //  Reads baseball stats from a file and counts
     //  total hits, outs, walks, and sacrifice flies
     //  for each player.
     //-------------------------------------------------
+
     public static void main (String[] args) throws IOException {
         Scanner fileScan, lineScan;
         String fileName, player;
@@ -29,9 +32,12 @@ public class BaseballStats {
         System.out.print ("Enter the name of the input file: ");
 
         fileName = scan.nextLine();
-        File file = new File(fileName);
         fileScan = new Scanner(new File(fileName));
         
+        while (!stats) {
+            System.out.println("Error! File not found.");
+        }
+
         while (fileScan.hasNextLine()) {
         	player = scan.nextLine();
         	System.out.println(player);
