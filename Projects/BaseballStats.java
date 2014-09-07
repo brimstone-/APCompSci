@@ -33,14 +33,10 @@ public class BaseballStats {
 
         fileName = scan.nextLine();
         fileScan = new Scanner(new File(fileName));
-        
-        while (!stats) {
-            System.out.println("Error! File not found.");
-        }
 
-        while (fileScan.hasNextLine()) {
+        while (fileScan.hasNext()) {
         	player = scan.nextLine();
-        	System.out.println(player);
+        	System.out.println("Name: " + player);
         }
     }
 }
