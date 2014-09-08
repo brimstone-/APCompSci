@@ -7,7 +7,7 @@
 
 import java.util.Scanner;
 
-public class PalindromeTester2 {
+public class PalindromeTester2_1 {
 
     public static void main (String [] args) {
 
@@ -15,7 +15,7 @@ public class PalindromeTester2 {
         Scanner sc = new Scanner (System.in);
 
         while (another.equalsIgnoreCase("y")) {
-            
+
             System.out.print("Please enter a potential palindrome: ");
             input = sc.nextLine();
 
@@ -38,7 +38,6 @@ public class PalindromeTester2 {
             another = sc.nextLine();
         }
     }
-
     public static String reverseString(String Line) {
 
         int length = Line.length() - 1;
@@ -60,7 +59,10 @@ public class PalindromeTester2 {
         String s = "";
 
         for (int i = 0; i < length; i++) {
-            if (Character.isLetter(Line.charAt(i))) {
+
+            Integer value = Integer.valueOf(Line.charAt(i));
+
+            if (i > 64 && i < 91 || i > 96 && i < 123) {
                 s += Line.charAt(i);
             }
         }

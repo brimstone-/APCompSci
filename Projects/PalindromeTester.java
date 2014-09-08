@@ -8,11 +8,14 @@
 import java.util.Scanner;
 
 public class PalindromeTester {
+
     public static void main (String [] args) {
+
         String input, reverse, another = "y";
         Scanner sc = new Scanner (System.in);
 
         while (another.equalsIgnoreCase("y")) {
+
             System.out.print("Please enter a potential palindrome: ");
             input = sc.nextLine();
 
