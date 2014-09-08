@@ -1,5 +1,5 @@
 /**
- * 1.4 PalindromeTester2
+ * 1.4 PalindromeTester2_1
  *
  * @author Matthew Cheng
  * @version  9/6
