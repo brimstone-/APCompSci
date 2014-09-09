@@ -64,7 +64,6 @@ public class BaseballStats {
                 if (stat.charAt(i) != ',') {
                     s += stat.charAt(i);
                 }
-                //Integer value = Integer.valueOf(s.charAt(i));
 
                 int m = stat.charAt(i);
 
