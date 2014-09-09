@@ -38,6 +38,7 @@ public class PalindromeTester2_1 {
             another = sc.nextLine();
         }
     }
+    
     public static String reverseString(String Line) {
 
         int length = Line.length() - 1;

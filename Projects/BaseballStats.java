@@ -38,56 +38,52 @@ public class BaseballStats {
 
         while (fileScan.hasNext()) {
 
-            //firstName = fileScan.next();
-            //fileScan.useDelimiter(",");
-            //lastName = fileScan.next();
-            //System.out.print(firstName + " " + lastName);
-
             hits = 0;
             outs = 0;
             walks = 0;
             sacrifices = 0;
 
-            while (fileScan.hasNext()) {
-                firstName = fileScan.next();
-                fileScan.useDelimiter(",");
-                lastName = fileScan.next();
-                String stat;
-                fileScan.useDelimiter(" ");
-                stat = fileScan.nextLine();
-                System.out.println(stat);
-                int length = stat.length();
-                String s = "";
+            fileScan.useDelimiter(" ");
+            firstName = fileScan.next();
+            fileScan.useDelimiter(",");
+            lastName = fileScan.next();
 
-                for (int i = 0; i < length; i++) {
+            System.out.print(firstName + " " + lastName);
 
-                    Integer value = Integer.valueOf(stat.charAt(i));
+            String stat, s = "";
+            fileScan.useDelimiter(" ");
 
-                    if (i > 64 && i < 91 || i > 96 && i < 123) {
-                        s += stat.charAt(i);
-                    }
+            stat = fileScan.nextLine();
+
+            //System.out.println();
+            //System.out.print("   raw:" + stat);
+
+            int length = stat.length();
+
+            for (int i = length - 1; i >= 0; i--) {
+                if (stat.charAt(i) != ',') {
+                    s += stat.charAt(i);
                 }
+                //Integer value = Integer.valueOf(s.charAt(i));
 
-                length = stat.length();
-                for (int i = 0; i < length; i++) {
-                    Integer value = Integer.valueOf(stat.charAt(i));
-                    if (i == 104) {
-                        hits++;
-                    } else if (i == 111) {
-                        outs++;
-                    } else if (i == 119) {
-                        walks++;
-                    } else {
-                        sacrifices++;
-                    }
+                int m = stat.charAt(i);
+
+                if (m == 104) {
+                    hits++;
+                } else if (m == 111) {
+                    outs++;
+                } else if (m == 119) {
+                    walks++;
+                } else if (m == 115) {
+                    sacrifices++;
                 }
-
-                System.out.println();
-                System.out.print("  " + " hits: " + hits + " outs: " + outs + " walks: " + walks + " sacrifices: " + sacrifices);
-                fileScan.useDelimiter(",");
             }
 
-
+            System.out.println();
+            //System.out.println("   processed: " + s);
+            System.out.println("\thits: " + hits + " outs: " + outs + " walks: " + walks + " sacrifices: " + sacrifices);
+            fileScan.useDelimiter(",");
         }
+
     }
 }
