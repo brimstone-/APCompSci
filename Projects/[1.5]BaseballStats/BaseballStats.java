@@ -17,6 +17,7 @@
 
 import java.util.Scanner;
 import java.io.*;
+import java.text.DecimalFormat;
 public class BaseballStats {
 
     //-------------------------------------------------
@@ -76,13 +77,18 @@ public class BaseballStats {
                 } else if (m == 115) {
                     sacrifices++;
                 }
+
             }
+
+            
 
             System.out.println();
             //System.out.println("   processed: " + s);
             System.out.println("\thits: " + hits + " outs: " + outs + " walks: " + walks + " sacrifices: " + sacrifices);
+            DecimalFormat df = new DecimalFormat("#.000");
+            System.out.println("\tBatting Average: " + df.format(((double)hits / (hits + outs))));
+            System.out.println();
             fileScan.useDelimiter(",");
         }
-
     }
 }
