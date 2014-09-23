@@ -12,7 +12,7 @@ public class Triangle
     }
     public double area () //Hero's Formula.
     {
-        double s = 0.5 * (side1 + side2 + side3);
+        double s = 0.5 * perimeter();
         return Math.sqrt(s*(s-side1)*(s-side2)*(s-side3));
     }
     public boolean isValid ()
