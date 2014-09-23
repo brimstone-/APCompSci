@@ -10,7 +10,7 @@ public class Triangle
         side2 = s2;
         side3 = s3;
     }
-    public double area ()
+    public double area () //Hero's Formula.
     {
         double s = 0.5 * (side1 + side2 + side3);
         return Math.sqrt(s*(s-side1)*(s-side2)*(s-side3));
