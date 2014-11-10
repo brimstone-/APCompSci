@@ -42,7 +42,7 @@ public class VoteCounterGUI
         labelSue = new JLabel("Votes for Sue: " + votesForSue);
         panel = new JPanel();
         panel.setPreferredSize (new Dimension(WIDTH, HEIGHT));
-        panel.setBackground (Color.blue);
+        panel.setBackground (Color.gray);
         panel.add(joe);
         panel.add(labelJoe);
         panel.add(sue);
