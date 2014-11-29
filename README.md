@@ -1,3 +1,3 @@
 ### APCompSci
 
-AP Computer Science assignments.  Hip hip hooray.
+AP Computer Science assignments.
