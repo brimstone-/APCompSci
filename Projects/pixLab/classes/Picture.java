@@ -110,35 +110,13 @@ public class Picture extends SimplePicture {
         Pixel toPixel = null;
         Pixel[][] toPixels = this.getPixels2D();
         Pixel[][] fromPixels = fromPic.getPixels2D();
-        for (int fromRow = 0, toRow = startRow;
-                fromRow < fromPixels.length &&
-                toRow < toPixels.length;
-                fromRow++, toRow++) {
-            for (int fromCol = 0, toCol = startCol;
-                    fromCol < fromPixels[0].length &&
-                    toCol < toPixels[0].length;
-                    fromCol++, toCol++) {
+        for (int fromRow = 0, toRow = startRow; fromRow < fromPixels.length && toRow < toPixels.length; fromRow++, toRow++) {
+            for (int fromCol = 0, toCol = startCol; fromCol < fromPixels[0].length && toCol < toPixels[0].length; fromCol++, toCol++) {
                 fromPixel = fromPixels[fromRow][fromCol];
                 toPixel = toPixels[toRow][toCol];
                 toPixel.setColor(fromPixel.getColor());
             }
         }
-    }
-
-    /** Method to create a collage of several pictures */
-    public void createCollage() {
-        Picture flower1 = new Picture("flower1.jpg");
-        Picture flower2 = new Picture("flower2.jpg");
-        this.copy(flower1, 0, 0);
-        this.copy(flower2, 100, 0);
-        this.copy(flower1, 200, 0);
-        Picture flowerNoBlue = new Picture(flower2);
-        flowerNoBlue.zeroBlue();
-        this.copy(flowerNoBlue, 300, 0);
-        this.copy(flower1, 400, 0);
-        this.copy(flower2, 500, 0);
-        this.mirrorVertical();
-        this.write("collage.jpg");
     }
 
     /** Method to show large changes in color
@@ -343,6 +321,51 @@ public class Picture extends SimplePicture {
                 rightPixel.setColor(leftPixel.getColor());
             }
         }
+    }
+    
+    /** Method to create a collage of several pictures */
+    public void createCollage() {
+        Picture flower1 = new Picture("flower1.jpg");
+        Picture flower2 = new Picture("flower2.jpg");
+        this.copy(flower1, 0, 0);
+        this.copy(flower2, 100, 0);
+        this.copy(flower1, 200, 0);
+        Picture flowerNoBlue = new Picture(flower2);
+        flowerNoBlue.zeroBlue();
+        this.copy(flowerNoBlue, 300, 0);
+        this.copy(flower1, 400, 0);
+        this.copy(flower2, 500, 0);
+        this.mirrorVertical();
+        this.write("/Users/mcheng5/Desktop/APCompSci/Projects/pixLab/classes/collage.jpg");
+    }
+    
+    public void copy(Picture fromPic, int origStartRow, int origStartCol, int finalStartRow, int finalStartCol, int origEndRow, int origEndCol, int finalEndRow, int finalEndCol) {
+        Pixel fromPixel = null;
+        Pixel toPixel = null;
+        Pixel[][] toPixels = this.getPixels2D();
+        Pixel[][] fromPixels = fromPic.getPixels2D();
+        for (int fromRow = origStartRow, toRow = finalStartRow; fromRow < origEndRow && toRow < origEndRow; fromRow++, toRow++) {
+            for (int fromCol = origStartCol, toCol = finalStartCol; fromCol < origEndCol && toCol < finalEndCol; fromCol++, toCol++) {
+                fromPixel = fromPixels[fromRow][fromCol];
+                toPixel = toPixels[toRow][toCol];
+                toPixel.setColor(fromPixel.getColor());
+            }
+        }
+    }
+    
+        public void createCollage2() {
+        Picture flower1 = new Picture("flower1.jpg");
+        Picture flower2 = new Picture("flower2.jpg");
+        this.copy(flower1, 0, 28, 0, 28, 35, 70, 100, 100);
+        this.copy(flower2, 20, 20, 0, 100, 60, 60, 160, 160);
+        this.copy(flower1, 200, 0);
+        Picture flowerNoBlue = new Picture(flower2);
+        flowerNoBlue.zeroBlue();
+        this.copy(flowerNoBlue, 300, 0);
+        this.copy(flower1, 400, 0);
+        this.copy(flower2, 500, 0);
+        this.mirrorVertical();
+        this.write("/Users/mcheng5/Desktop/APCompSci/Projects/pixLab/classes/collage.jpg");
     }
 
     /* Main method for testing - each class in Java can have a main
