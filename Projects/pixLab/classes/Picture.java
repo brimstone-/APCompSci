@@ -119,29 +119,6 @@ public class Picture extends SimplePicture {
         }
     }
 
-    /** Method to show large changes in color
-     * @param edgeDist the distance for finding edges
-     */
-    public void edgeDetection(int edgeDist) {
-        Pixel leftPixel = null;
-        Pixel rightPixel = null;
-        Pixel[][] pixels = this.getPixels2D();
-        Color rightColor = null;
-        for (int row = 0; row < pixels.length; row++) {
-            for (int col = 0;
-                    col < pixels[0].length - 1; col++) {
-                leftPixel = pixels[row][col];
-                rightPixel = pixels[row][col + 1];
-                rightColor = rightPixel.getColor();
-                if (leftPixel.colorDistance(rightColor) >
-                        edgeDist)
-                    leftPixel.setColor(Color.BLACK);
-                else
-                    leftPixel.setColor(Color.WHITE);
-            }
-        }
-    }
-
     public void negate() {
         Pixel[][] pixels = this.getPixels2D();
         for (Pixel[] rowArray : pixels) {
@@ -307,7 +284,7 @@ public class Picture extends SimplePicture {
         }
     }
 
-    public void mirrorGull(){
+    public void mirrorGull() {
         Pixel[][] pixels = this.getPixels2D();
         int mirrorPoint = 350;
         Pixel leftPixel = null;
@@ -322,7 +299,7 @@ public class Picture extends SimplePicture {
             }
         }
     }
-    
+
     /** Method to create a collage of several pictures */
     public void createCollage() {
         Picture flower1 = new Picture("flower1.jpg");
@@ -338,7 +315,7 @@ public class Picture extends SimplePicture {
         this.mirrorVertical();
         this.write("/Users/mcheng5/Desktop/APCompSci/Projects/pixLab/classes/collage.jpg");
     }
-    
+
     public void copy(Picture fromPic, int origStartRow, int origStartCol, int finalStartRow, int finalStartCol, int origEndRow, int origEndCol, int finalEndRow, int finalEndCol) {
         Pixel fromPixel = null;
         Pixel toPixel = null;
@@ -352,8 +329,8 @@ public class Picture extends SimplePicture {
             }
         }
     }
-    
-        public void createCollage2() {
+
+    public void createCollage2() {
         Picture flower1 = new Picture("flower1.jpg");
         Picture flower2 = new Picture("flower2.jpg");
         this.copy(flower1, 0, 28, 0, 28, 35, 70, 100, 100);
@@ -368,13 +345,47 @@ public class Picture extends SimplePicture {
         this.write("/Users/mcheng5/Desktop/APCompSci/Projects/pixLab/classes/collage.jpg");
     }
 
+    /** Method to show large changes in color
+     * @param edgeDist the distance for finding edges
+     */
+    public void edgeDetection(int edgeDist) {
+        Pixel leftPixel = null;
+        Pixel rightPixel = null;
+        Pixel bottomPixel = null;
+        Pixel topPixel = null;
+        Pixel[][] pixels = this.getPixels2D();
+        Color rightColor = null;
+        for (int row = 0; row < pixels.length; row++) {
+            for (int col = 0; col < pixels[0].length - 1; col++) {
+                leftPixel = pixels[row][col];
+                rightPixel = pixels[row][col + 1];
+                rightColor = rightPixel.getColor();
+                if (leftPixel.colorDistance(rightColor) > edgeDist)
+                    leftPixel.setColor(Color.BLACK);
+                else
+                    leftPixel.setColor(Color.WHITE);
+            }
+        }
+        for (int row = 0; row < pixels.length - 1; row++) {
+            for (int col = 0; col < pixels[0].length - 1; col++) {
+                topPixel = pixels[row][col];
+                bottomPixel = pixels[row + 1][col ];
+                rightColor = rightPixel.getColor();
+                if (leftPixel.colorDistance(rightColor) > edgeDist)
+                    leftPixel.setColor(Color.BLACK);
+                else
+                    leftPixel.setColor(Color.WHITE);
+            }
+        }
+    }
+
     /* Main method for testing - each class in Java can have a main
      * method
      */
     public static void main(String[] args) {
-        Picture collage = new Picture("640x480.jpg");
-        //collage.explore();
-        collage.createCollage2();
-        collage.explore();
+        Picture swan = new Picture("swan.jpg");
+        //swan.explore();
+        swan.edgeDetection(10);
+        swan.explore();
     } // this } is the end of class Picture, put all new methods before this
 }
