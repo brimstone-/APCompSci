@@ -372,9 +372,9 @@ public class Picture extends SimplePicture {
      * method
      */
     public static void main(String[] args) {
-        Picture seagull = new Picture("seagull.jpg");
-        seagull.explore();
-        seagull.mirrorGull();
-        seagull.explore();
+        Picture collage = new Picture("640x480.jpg");
+        //collage.explore();
+        collage.createCollage2();
+        collage.explore();
     } // this } is the end of class Picture, put all new methods before this
 }
