@@ -31,6 +31,6 @@ public class Item
 
     public String toString()
     {
-        return "Item:  " + description + '\n' + "Cost:  $" + cost;
+        return "Item:  " + description + ", Cost:  " + cost;
     }
 }

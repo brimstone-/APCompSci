@@ -24,7 +24,7 @@ public class ExpensePlan
 
             if (input.equals("N") || input.equals("n")){
                 balance += iterator;
-                while (wishes.peek() != null && wishes.peek().getCost() < balance){
+                while (!wishes.isEmpty() && wishes.peek().getCost() < balance){
                     Item temp = wishes.getFirst();
                     while (temp != null && temp.getCost() < balance){
                         balance -= temp.getCost();
