@@ -128,7 +128,8 @@ public class ExpensePlannerGUI {
                 currentAllowanceLabel.setText("");
                 currentAllowanceLabel.setText("Allowance set aside each month: " + allowance);
                 currentAllowanceAlert.setText("");
-            } else {
+            }
+            else {
                 currentAllowanceAlert.setText("Please enter a sum to set aside each month.");
             }
         }
@@ -167,12 +168,13 @@ public class ExpensePlannerGUI {
     private class itemButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent event) {
             if (!itemNameField.getText().trim().equals("") && !itemCostField.getText().trim().equals("")) {
-                Item buyThis = new Item(itemNameField.getText(), Integer.parseInt(itemCostField.getText()));
+                Item buyThis = new Item(itemNameField.getText().trim(), Integer.parseInt(itemCostField.getText()));
                 wishes.add(buyThis);
                 itemNameField.setText("");
                 itemCostField.setText("");
                 confirmationLabel.setText("Got it!");
-            } else {
+            }
+            else {
                 confirmationLabel.setText("Please enter valid input for the item description and cost.");
             }
         }
@@ -181,7 +183,8 @@ public class ExpensePlannerGUI {
         public void actionPerformed(ActionEvent event) {
             if (!wishes.isEmpty()) {
                 wishlistLabel.setText("Items to be bought:   " + wishes.toString() + "");
-            } else {
+            }
+            else {
                 wishlistLabel.setText("No items to be bought, add something to the wishlist!");
             }
         }
