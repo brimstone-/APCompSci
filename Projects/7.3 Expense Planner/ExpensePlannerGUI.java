@@ -13,7 +13,7 @@ import java.util.*;
 
 public class ExpensePlannerGUI {
     private int WIDTH = 700;
-    private int HEIGHT = 200;
+    private int HEIGHT = 300;
 
     private JFrame frame;
     private JPanel panel;
@@ -26,15 +26,14 @@ public class ExpensePlannerGUI {
     private int allowance = 0;
 
     private JLabel currentAllowanceLabel;
-    private TextField currentAllowanceField;
+
+    private JLabel currentAllowanceAlert;
 
     private JButton nextButton;
     private int balance = 0;
     private JLabel currentBalanceLabel;
-    private TextField currentBalanceField;
 
     private JLabel currentMonthLabel;
-    private TextField currentMonthField;
     private int month = 1;
     private String currentMonth;
 
@@ -43,6 +42,10 @@ public class ExpensePlannerGUI {
 
     private TextField itemCostField;
     private TextField itemNameField;
+
+    private JLabel confirmationLabel;
+    private JLabel itemBoughtLabel;
+    private String itemBought = "";
 
     private JButton itemButton;
 
@@ -59,25 +62,26 @@ public class ExpensePlannerGUI {
 
         panel = new JPanel();
 
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+
         panel.setPreferredSize (new Dimension(WIDTH, HEIGHT));
         panel.setBackground (Color.gray);
 
-        setAllowanceLabel = new JLabel("Set the Monthly Allowance");
+        setAllowanceLabel = new JLabel("Set the Monthly Allowance (Press <ENTER>)");
         setAllowanceField = new TextField(15);
 
-        currentAllowanceLabel = new JLabel("Allowance set aside each month");
-        currentAllowanceField = new TextField(15);
+        currentAllowanceLabel = new JLabel("Allowance set aside each month: ");
 
-        setAllowanceField.addActionListener(new allowanceButtonListener());
+        setAllowanceField.addActionListener(new allowanceFieldListener());
+
+        currentAllowanceAlert = new JLabel("");
 
         nextButton = new JButton("Go to next month");
         nextButton.addActionListener(new nextButtonListener());
 
         currentBalanceLabel = new JLabel("Current Balance: ");
-        currentBalanceField = new TextField(15);
 
         currentMonthLabel = new JLabel("Current Month: ");
-        currentMonthField = new TextField(15);
 
         itemButton = new JButton("Add an item to the wishlist");
         itemButton.addActionListener(new itemButtonListener());
@@ -88,29 +92,33 @@ public class ExpensePlannerGUI {
         itemCostField = new TextField(15);
         itemNameField = new TextField(15);
 
+        confirmationLabel = new JLabel("");
+        itemBoughtLabel = new JLabel("");
+
         wishlistButton = new JButton("View current wishlist");
         wishlistButton.addActionListener(new wishlistButtonListener());
 
         wishlistLabel = new JLabel("");
 
         panel.add(setAllowanceLabel);
+        panel.add(currentAllowanceAlert);
         panel.add(setAllowanceField);
 
         panel.add(currentAllowanceLabel);
-        panel.add(currentAllowanceField);
 
         panel.add(currentBalanceLabel);
-        panel.add(currentBalanceField);
 
         panel.add(currentMonthLabel);
-        panel.add(currentMonthField);
 
         panel.add(nextButton);
+
+        panel.add(itemBoughtLabel);
 
         panel.add(itemNameLabel);
         panel.add(itemNameField);
         panel.add(itemCostLabel);
         panel.add(itemCostField);
+        panel.add(confirmationLabel);
         panel.add(itemButton);
 
         panel.add(wishlistButton);
@@ -132,11 +140,17 @@ public class ExpensePlannerGUI {
     //***************************************************
     // Represents a listener for button push (action) events
     //***************************************************
-    private class allowanceButtonListener implements ActionListener {
+    private class allowanceFieldListener implements ActionListener {
         public void actionPerformed(ActionEvent event) {
-            allowance = Integer.parseInt(setAllowanceField.getText());
-            currentAllowanceField.setText("");
-            currentAllowanceField.setText(allowance + "");
+            if (!setAllowanceField.getText().trim().equals("")) {
+                allowance = Integer.parseInt(setAllowanceField.getText());
+                currentAllowanceLabel.setText("");
+                currentAllowanceLabel.setText("Allowance set aside each month: " + allowance);
+                currentAllowanceAlert.setText("");
+            }
+            else {
+            	currentAllowanceAlert.setText("Please enter a sum to set aside each month.");
+            }
         }
     }
     private class nextButtonListener implements ActionListener {
@@ -148,33 +162,46 @@ public class ExpensePlannerGUI {
                 while (temp != null && temp.getCost() < balance) {
                     balance -= temp.getCost();
 
+                    itemBought += temp.getDescription() + " has been purchased for $" + temp.getCost() + ", ";
+
                     wishes.remove();
+
+                    itemBoughtLabel.setText("");
+                    itemBoughtLabel.setText(itemBought);
 
                     if (wishes.peek() != null) temp = wishes.getFirst();
                     else temp = null;
                 }
+                itemBought = "";
             }
-            currentBalanceField.setText("");
-            currentBalanceField.setText(balance + "");
+            currentBalanceLabel.setText("");
+            currentBalanceLabel.setText("Current Balance: " + balance);
 
             month++;
             if (month > 12) month = 1;
+
             currentMonth = returnMonth(month);
-            currentMonthField.setText(currentMonth);
+            currentMonthLabel.setText("Current Month: " + currentMonth);
         }
     }
     private class itemButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent event) {
-            Item buyThis = new Item(itemNameField.getText(), Integer.parseInt(itemCostField.getText()));
-            wishes.add(buyThis);
+            if (!itemNameField.getText().trim().equals("") && !itemCostField.getText().trim().equals("")) {
+                Item buyThis = new Item(itemNameField.getText(), Integer.parseInt(itemCostField.getText()));
+                wishes.add(buyThis);
+                itemNameField.setText("");
+                itemCostField.setText("");
+                confirmationLabel.setText("Got it!");
+            } else {
+                confirmationLabel.setText("Please enter valid input for the item description and cost.");
+            }
         }
     }
     private class wishlistButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent event) {
             if (!wishes.isEmpty()) {
                 wishlistLabel.setText("Items to be bought:   " + wishes.toString() + "");
-            }
-            else {
+            } else {
                 wishlistLabel.setText("No items to be bought, add something to the wishlist!");
             }
         }
