@@ -23,11 +23,9 @@ public class ExpensePlannerGUI {
 
     private JLabel setAllowanceLabel;
     private TextField setAllowanceField;
-    private int allowance = 0;
-
     private JLabel currentAllowanceLabel;
-
     private JLabel currentAllowanceAlert;
+    private int allowance = 0;
 
     private JButton nextButton;
     private int balance = 0;
@@ -46,7 +44,6 @@ public class ExpensePlannerGUI {
     private JLabel confirmationLabel;
     private JLabel itemBoughtLabel;
     private String itemBought = "";
-
     private JButton itemButton;
 
     private JButton wishlistButton;
@@ -61,34 +58,26 @@ public class ExpensePlannerGUI {
         frame.setDefaultCloseOperation (JFrame.EXIT_ON_CLOSE);
 
         panel = new JPanel();
-
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-
         panel.setPreferredSize (new Dimension(WIDTH, HEIGHT));
         panel.setBackground (Color.gray);
 
         setAllowanceLabel = new JLabel("Set the Monthly Allowance (Press <ENTER>)");
         setAllowanceField = new TextField(15);
-
         currentAllowanceLabel = new JLabel("Allowance set aside each month: ");
-
         setAllowanceField.addActionListener(new allowanceFieldListener());
-
         currentAllowanceAlert = new JLabel("");
 
         nextButton = new JButton("Go to next month");
         nextButton.addActionListener(new nextButtonListener());
 
         currentBalanceLabel = new JLabel("Current Balance: ");
-
         currentMonthLabel = new JLabel("Current Month: ");
 
         itemButton = new JButton("Add an item to the wishlist");
         itemButton.addActionListener(new itemButtonListener());
-
         itemNameLabel = new JLabel("Item Name: ");
         itemCostLabel = new JLabel("Item Cost: ");
-
         itemCostField = new TextField(15);
         itemNameField = new TextField(15);
 
@@ -97,30 +86,22 @@ public class ExpensePlannerGUI {
 
         wishlistButton = new JButton("View current wishlist");
         wishlistButton.addActionListener(new wishlistButtonListener());
-
         wishlistLabel = new JLabel("");
 
         panel.add(setAllowanceLabel);
         panel.add(currentAllowanceAlert);
         panel.add(setAllowanceField);
-
         panel.add(currentAllowanceLabel);
-
         panel.add(currentBalanceLabel);
-
         panel.add(currentMonthLabel);
-
         panel.add(nextButton);
-
         panel.add(itemBoughtLabel);
-
         panel.add(itemNameLabel);
         panel.add(itemNameField);
         panel.add(itemCostLabel);
         panel.add(itemCostField);
         panel.add(confirmationLabel);
         panel.add(itemButton);
-
         panel.add(wishlistButton);
         panel.add(wishlistLabel);
 
@@ -147,9 +128,8 @@ public class ExpensePlannerGUI {
                 currentAllowanceLabel.setText("");
                 currentAllowanceLabel.setText("Allowance set aside each month: " + allowance);
                 currentAllowanceAlert.setText("");
-            }
-            else {
-            	currentAllowanceAlert.setText("Please enter a sum to set aside each month.");
+            } else {
+                currentAllowanceAlert.setText("Please enter a sum to set aside each month.");
             }
         }
     }
