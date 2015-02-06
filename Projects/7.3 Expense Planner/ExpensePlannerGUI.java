@@ -114,10 +114,6 @@ public class ExpensePlannerGUI {
         frame.pack();
         frame.setVisible(true);
     }
-    public void itemDisplay() {
-        itemFrame.pack();
-        itemFrame.setVisible(true);
-    }
     //***************************************************
     // Represents a listener for button push (action) events
     //***************************************************
