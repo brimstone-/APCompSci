@@ -1,10 +1,10 @@
-//*********************************************************
+//-----------------------------------------------------------------
 // ExpensePlannerGUI.java
 //
 // GUI to calculate buying items on a wishlist with funds
 // gained on a monthly basis.
 // Items are bought in queue order.
-//*********************************************************
+//-----------------------------------------------------------------
 
 import java.awt.*;
 import java.awt.event.*;
@@ -50,9 +50,9 @@ public class ExpensePlannerGUI {
     private JLabel wishlistLabel;
 
     LinkedList<Item> wishes = new LinkedList<Item>();
-    //----------------------------------------------
+    //-----------------------------------------------------------------
     // Constructor: Sets up the GUI.
-    //----------------------------------------------
+    //-----------------------------------------------------------------
     public ExpensePlannerGUI() {
         frame = new JFrame ("Expense Planner");
         frame.setDefaultCloseOperation (JFrame.EXIT_ON_CLOSE);
@@ -114,9 +114,9 @@ public class ExpensePlannerGUI {
         frame.pack();
         frame.setVisible(true);
     }
-    //***************************************************
+    //-----------------------------------------------------------------
     // Represents a listener for button push (action) events
-    //***************************************************
+    //-----------------------------------------------------------------
     private class allowanceFieldListener implements ActionListener {
         public void actionPerformed(ActionEvent event) {
             if (!setAllowanceField.getText().trim().equals("")) {
