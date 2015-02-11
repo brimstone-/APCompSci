@@ -4,9 +4,10 @@
  */
 public class ExpressionTree
 {
+    public ExpressionNode head;
     public ExpressionTree(String s)
     {
-
+        build(s);
     }
 
     //-----------------------------------------------------------------
@@ -15,7 +16,7 @@ public class ExpressionTree
     //-----------------------------------------------------------------
     public int EvaluateTree()
     {
-
+        return head.getExprValue();
     }
 
     //-----------------------------------------------------------------
@@ -23,7 +24,15 @@ public class ExpressionTree
     //-----------------------------------------------------------------
     private ExpressionNode build(String s)
     {
-
+        String val = "";
+        if (s.lastIndexOf("+") != -1 || s.lastIndexOf("-") != -1) {
+            
+        }
+        else if (s.lastIndexOf("*") != -1 || s.lastIndexOf("/") != -1 || s.lastIndexOf("%") != -1) {
+            
+        }
+        else
+            return new ExpressionNode(val, null, null);
     }
 
 }
