@@ -7,7 +7,7 @@ public class ExpressionTree
     public ExpressionNode head;
     public ExpressionTree(String s)
     {
-        build(s);
+        head = build(s);
     }
 
     //-----------------------------------------------------------------
@@ -24,15 +24,31 @@ public class ExpressionTree
     //-----------------------------------------------------------------
     private ExpressionNode build(String s)
     {
-        String val = "";
-        if (s.lastIndexOf("+") != -1 || s.lastIndexOf("-") != -1) {
-            
+        int plus = s.lastIndexOf("+");
+        int minus = s.lastIndexOf("-");
+        int multiply = s.lastIndexOf("*");
+        int divide = s.lastIndexOf("/");
+        int mod = s.lastIndexOf("%");
+        
+        if (plus > -1 || minus > -1) {
+            if (plus > minus) {
+                return new ExpressionNode("+", build(s.substring(0, plus)), build(s.substring(plus+1)));
+            }
+            else {
+                return new ExpressionNode("-", build(s.substring(0, minus)), build(s.substring(minus+1)));
+            }
         }
-        else if (s.lastIndexOf("*") != -1 || s.lastIndexOf("/") != -1 || s.lastIndexOf("%") != -1) {
-            
+        else if (multiply > -1 || divide > -1 || mod > -1) {
+            if (multiply > divide && multiply > mod) {
+                return new ExpressionNode("*", build(s.substring(0, multiply)), build(s.substring(multiply+1)));
+            }
+            else if (divide > multiply && divide > mod) {
+                return new ExpressionNode("/", build(s.substring(0, divide)), build(s.substring(divide+1)));
+            }
+            else
+                return new ExpressionNode("%", build(s.substring(0, mod)), build(s.substring(mod+1)));
         }
         else
-            return new ExpressionNode(val, null, null);
+            return new ExpressionNode(s, null, null);
     }
-
 }
