@@ -21,34 +21,25 @@ public class ExpressionNode extends TreeNode {
          String val = (String)this.getValue();
          ExpressionNode left = (ExpressionNode)this.getLeft();
          ExpressionNode right = (ExpressionNode)this.getRight();
-         if (isInteger(val)) {
-            return Integer.parseInt(val);
-         }
-         else if (val.equals("+")) {
-            return left.getExprValue() + right.getExprValue();
+         int result;
+         if (val.equals("+")) {
+            result = left.getExprValue() + right.getExprValue();
          }
          else if (val.equals("-")) {
-            return left.getExprValue() - right.getExprValue();
+            result = left.getExprValue() - right.getExprValue();
          }
          else if (val.equals("*")) {
-            return left.getExprValue() * right.getExprValue();
+            result = left.getExprValue() * right.getExprValue();
          }
          else if (val.equals("/")) {
-            return left.getExprValue() / right.getExprValue();
+            result = left.getExprValue() / right.getExprValue();
          }
          else if (val.equals("%")) {
-            return left.getExprValue() % right.getExprValue();
+            result = left.getExprValue() % right.getExprValue();
          }
-         else
-            return -999;
-      }
-      public static boolean isInteger(String input) {
-         try {
-            Integer.parseInt(input);
-            return true;
+         else {
+            result = Integer.parseInt(val);
          }
-         catch (Exception e) {
-            return false;
-         }
-      }
+        return result;
+    }
 }
