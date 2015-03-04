@@ -5,13 +5,11 @@
 //  Driver for testing a heap.
 //********************************************************************
 
-public class HeapTest
-{
+public class HeapTest {
    //-----------------------------------------------------------------
    //  Creates a heap, adds some elements to it, and prints it out.
    //-----------------------------------------------------------------
-   public static void main (String[] args)
-   {
+   public static void main (String[] args) {
       HeapOfCharacters heap = new HeapOfCharacters();
 
       heap.add('Q');
@@ -31,4 +29,4 @@ public class HeapTest
       heap.add('A');
       System.out.println (heap);
    }
-} 
+}
