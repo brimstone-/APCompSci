@@ -48,9 +48,9 @@ class TextEditorExample extends JFrame {
 
 		JButton cut = tool.add(Cut), cop = tool.add(Copy), pas = tool.add(Paste);
 
-		cut.setText(null); cut.setIcon(new ImageIcon("cut.gif"));
-		cop.setText(null); cop.setIcon(new ImageIcon("copy.gif"));
-		pas.setText(null); pas.setIcon(new ImageIcon("paste.gif"));
+		cut.setText(null); cut.setIcon(new ImageIcon("images/cut.gif"));
+		cop.setText(null); cop.setIcon(new ImageIcon("images/copy.gif"));
+		pas.setText(null); pas.setIcon(new ImageIcon("images/paste.gif"));
 
 		Save.setEnabled(false);
 		SaveAs.setEnabled(false);
@@ -70,7 +70,7 @@ class TextEditorExample extends JFrame {
 		}
 	};
 
-	Action New = new AbstractAction("New", new ImageIcon("new.gif")) {
+	Action New = new AbstractAction("New", new ImageIcon("images/new.gif")) {
 		public void actionPerformed(ActionEvent e) {
 			area.setText("");
 			currentFile = "Untitled";
@@ -80,7 +80,7 @@ class TextEditorExample extends JFrame {
 		}
 	};
 
-	Action Open = new AbstractAction("Open", new ImageIcon("open.gif")) {
+	Action Open = new AbstractAction("Open", new ImageIcon("images/open.gif")) {
 		public void actionPerformed(ActionEvent e) {
 			saveOld();
 			if (dialog.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
@@ -90,7 +90,7 @@ class TextEditorExample extends JFrame {
 		}
 	};
 
-	Action Save = new AbstractAction("Save", new ImageIcon("save.gif")) {
+	Action Save = new AbstractAction("Save", new ImageIcon("images/save.gif")) {
 		public void actionPerformed(ActionEvent e) {
 			if (!currentFile.equals("Untitled"))
 				saveFile(currentFile);
