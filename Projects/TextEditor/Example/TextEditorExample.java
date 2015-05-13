@@ -30,15 +30,16 @@ class TextEditorExample extends JFrame {
 		
 		file.addSeparator();
 
-		for (int i = 0; i < 4; i++) {
-			file.getItem(i).setIcon(null);
-		}
+		//for (int i = 0; i < 4; i++) {
+		//	file.getItem(i).setIcon(null);
+		//}
 
 		edit.add(Cut); edit.add(Copy); edit.add(Paste);
 
-		edit.getItem(0).setText("Cut");
-		edit.getItem(1).setText("Copy");
-		edit.getItem(2).setText("Paste");
+		edit.getItem(0).setText("Cut"); edit.getItem(0).setIcon(new ImageIcon("images/cut.gif"));
+		edit.getItem(1).setText("Copy"); edit.getItem(1).setIcon(new ImageIcon("images/copy.gif"));
+		edit.getItem(2).setText("Paste"); edit.getItem(2).setIcon(new ImageIcon("images/paste.gif"));
+
 		JToolBar tool = new JToolBar();
 		add(tool, BorderLayout.NORTH);
 		tool.add(New);
@@ -99,13 +100,13 @@ class TextEditorExample extends JFrame {
 		}
 	};
 
-	Action SaveAs = new AbstractAction("Save as...") {
+	Action SaveAs = new AbstractAction("Save as...", new ImageIcon("images/save.gif")) {
 		public void actionPerformed(ActionEvent e) {
 			saveFileAs();
 		}
 	};
 
-	Action Quit = new AbstractAction("Quit") {
+	Action Quit = new AbstractAction("Quit", new ImageIcon("images/quit.gif")) {
 		public void actionPerformed(ActionEvent e) {
 			saveOld();
 			System.exit(0);
