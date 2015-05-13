@@ -15,14 +15,14 @@ public class TextEditor extends JFrame { // Extend JFrame because GUI
 
 	// Set up a file chooser to open existing files
 	// Apparently, the way to get the current working directory in Java is the following line:
-	//     System.getProperty("user.dir"));
+	// System.getProperty("user.dir"));
 	// So the constructor of JFileChooser can take a file path
 	// as the default location to open to, so I'll use that
 	private JFileChooser fileChooser = new JFileChooser(System.getProperty("user.dir"));
 
 	// Set up the font to use throughout the editor
 	// I'm using a monospaced font becuse yes.
-	private Font monospaced = new Font("Monospaced", Font.PLAIN, 12);
+	private Font monospaced = new Font("Monaco", Font.PLAIN, 11);
 
 	// Set up a scrollbar should it become necessary
 	private JScrollPane scroll = new JScrollPane(text, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -152,5 +152,7 @@ public class TextEditor extends JFrame { // Extend JFrame because GUI
 
 	public static void main(String[] args) {
 		new TextEditor(); // Main program to actually make and run the editor
+		System.setProperty("awt.useSystemAAFontSettings","on"); // Anti-Alias fonts
+  		System.setProperty("swing.aatext", "true");
 	}
 }
