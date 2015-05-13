@@ -124,7 +124,10 @@ public class TextEditor extends JFrame { // Extend JFrame because GUI
 			title = fileName; // the fileName given to the method should have been the file name the user wishes to use
 			setTitle(title);
 		}
-		catch (IOException e) { /* This should never break :) */ }
+		catch (IOException e) {
+			Toolkit.getDefaultToolkit().beep(); // If the file didn't exist, yell at the user
+			JOptionPane.showMessageDialog(this, "Editor can't write to the file called " + fileName + " either you don't have permission, or something else went wrong, like a velociraptor chewing on your motherboard.");
+		}
 	}
 
 	private void saveOld() {
