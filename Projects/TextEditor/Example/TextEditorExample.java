@@ -2,6 +2,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import javax.swing.*;
+import javax.swing.event.*;
 import javax.swing.text.*;
 
 class TextEditorExample extends JFrame {
@@ -20,7 +21,8 @@ class TextEditorExample extends JFrame {
 		setJMenuBar(JMB);
 		JMenu file = new JMenu("File");
 		JMenu edit = new JMenu("Edit");
-		JMB.add(file); JMB.add(edit);
+		JMB.add(file);
+		JMB.add(edit);
 
 		file.add(New);
 		file.add(Open);
@@ -36,9 +38,12 @@ class TextEditorExample extends JFrame {
 
 		edit.add(Cut); edit.add(Copy); edit.add(Paste);
 
-		edit.getItem(0).setText("Cut"); edit.getItem(0).setIcon(new ImageIcon("images/cut.gif"));
-		edit.getItem(1).setText("Copy"); edit.getItem(1).setIcon(new ImageIcon("images/copy.gif"));
-		edit.getItem(2).setText("Paste"); edit.getItem(2).setIcon(new ImageIcon("images/paste.gif"));
+		edit.getItem(0).setText("Cut");
+		edit.getItem(0).setIcon(new ImageIcon("images/cut.gif"));
+		edit.getItem(1).setText("Copy");
+		edit.getItem(1).setIcon(new ImageIcon("images/copy.gif"));
+		edit.getItem(2).setText("Paste");
+		edit.getItem(2).setIcon(new ImageIcon("images/paste.gif"));
 
 		JToolBar tool = new JToolBar();
 		add(tool, BorderLayout.NORTH);
@@ -49,9 +54,12 @@ class TextEditorExample extends JFrame {
 
 		JButton cut = tool.add(Cut), cop = tool.add(Copy), pas = tool.add(Paste);
 
-		cut.setText(null); cut.setIcon(new ImageIcon("images/cut.gif"));
-		cop.setText(null); cop.setIcon(new ImageIcon("images/copy.gif"));
-		pas.setText(null); pas.setIcon(new ImageIcon("images/paste.gif"));
+		cut.setText(null);
+		cut.setIcon(new ImageIcon("images/cut.gif"));
+		cop.setText(null);
+		cop.setIcon(new ImageIcon("images/copy.gif"));
+		pas.setText(null);
+		pas.setIcon(new ImageIcon("images/paste.gif"));
 
 		Save.setEnabled(false);
 		SaveAs.setEnabled(false);
