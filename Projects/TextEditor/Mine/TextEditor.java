@@ -31,18 +31,12 @@ public class TextEditor extends JFrame { // Extend JFrame because GUI
 	private JMenuBar menuBar = new JMenuBar();
 
 	private	JMenu file = new JMenu("File");
-	private	JMenu edit = new JMenu("Edit");
 
 	private	JMenuItem newButton = new JMenuItem("New");
 	private JMenuItem openButton = new JMenuItem("Open");
 	private JMenuItem save = new JMenuItem("Save");
-	private JMenuItem saveAs = new JMenuItem("Save As");
 	private JMenuItem quit = new JMenuItem("Quit");
 
-	private JMenuItem cut = new JMenuItem("Cut");
-	private JMenuItem copy = new JMenuItem("Copy");
-	private JMenuItem paste = new JMenuItem("Paste");
-    
 	public TextEditor() {
 
 		text.setFont(monospaced); // Set the font of the text area
@@ -51,11 +45,9 @@ public class TextEditor extends JFrame { // Extend JFrame because GUI
 		// Add my two menus to the menu bar
 		setJMenuBar(menuBar);
 		menuBar.add(file);
-		menuBar.add(edit);
 
 		// Set mnemonics/accelerators for keyboard shortcuts, activated with a KEY or alt+KEY
 		file.setMnemonic(KeyEvent.VK_F);
-		edit.setMnemonic(KeyEvent.VK_E);
 
 		openButton.setMnemonic(KeyEvent.VK_O);
 		openButton.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.ALT_MASK));
@@ -66,43 +58,57 @@ public class TextEditor extends JFrame { // Extend JFrame because GUI
 		quit.setMnemonic(KeyEvent.VK_Q);
 		quit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, ActionEvent.ALT_MASK));
 
-		cut.setMnemonic(KeyEvent.VK_X);
-		cut.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, ActionEvent.ALT_MASK));
-		copy.setMnemonic(KeyEvent.VK_C);
-		copy.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, ActionEvent.ALT_MASK));
-		paste.setMnemonic(KeyEvent.VK_V);
-		paste.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, ActionEvent.ALT_MASK));
-
 		// Set action listeners
-		
+		openButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+					readFile(fileChooser.getSelectedFile().getAbsolutePath());  // Use the file reader to get the selected file,
+																				// and then find it's directory path.
+																			 	// This is then given to the readFile method.
+				}															   
+			}
+		});
+
+		newButton.addActionListener(new ActionListener () {
+			public void actionPerformed(ActionEvent e) {
+				saveOld();
+				text.setText("");
+				title = "Untitled";
+				setTitle(title);
+			}
+		});
+
+		save.addActionListener(new ActionListener() { // My save button really just acts as a save as button,
+			                                          // and overwrites the old file everytime
+			public void actionPerformed(ActionEvent e) {
+				if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION)
+					saveFile(fileChooser.getSelectedFile().getAbsolutePath());
+			}
+		});
+
+		quit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				saveOld(); // Just in case the user forgot to save
+				System.exit(0); // Close program
+			}
+		});
+
+
 
 		// Add items to the file menu
-		file.add(newButton);  // 0
-		file.add(openButton); // 1
+		file.add(newButton);
+		file.add(openButton);
 		file.addSeparator();
-		file.add(save); // 2
-		file.add(saveAs); // 3
+		file.add(save);
 		file.addSeparator();
-		file.add(quit); // 4
+		file.add(quit);
 
 		// Set up the file menu items
 		newButton.setIcon(new ImageIcon("images/new.gif"));
 		openButton.setIcon(new ImageIcon("images/open.gif"));
 		save.setIcon(new ImageIcon("images/save.gif"));
-		saveAs.setIcon(new ImageIcon("images/save.gif"));
 		quit.setIcon(new ImageIcon("images/quit.gif"));
 
-		// Add items to the edit menu
-		edit.add(cut);
-		edit.add(copy);
-		edit.add(paste);
-
-		// Set up the edit menu items
-		edit.getItem(0).setIcon(new ImageIcon("images/cut.gif"));
-		edit.getItem(1).setIcon(new ImageIcon("images/copy.gif"));
-		edit.getItem(2).setIcon(new ImageIcon("images/paste.gif"));
-
-		//text.addKeyListener(key);
 		setTitle(title);
 
 		setDefaultCloseOperation(EXIT_ON_CLOSE); // Make window close if you close it
@@ -110,7 +116,38 @@ public class TextEditor extends JFrame { // Extend JFrame because GUI
 		setVisible(true);
 	}
 
+	private void saveFile(String fileName) {
+		try {
+			FileWriter w = new FileWriter(fileName); // Create a FileWriter
+			text.write(w); // Read the content of the textArea into the file 
+			w.close(); // Close the FileWriter
+			title = fileName; // the fileName given to the method should have been the file name the user wishes to use
+			setTitle(title);
+		}
+		catch (IOException e) { /* This should never break :) */ }
+	}
+
+	private void saveOld() {
+		if (JOptionPane.showConfirmDialog(this, "Would you like to save " + title + " ?", "Save", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
+			saveFile(title); // If the user quits, make sure they have saved all work
+
+	}
+
+	private void readFile(String fileName) {
+		try {
+			FileReader r = new FileReader(fileName); // Create a FileReader
+			text.read(r, null); // Read the fileName into the reader object 
+			r.close(); // Close the FileReader
+			title = fileName; // Set the title to the file name that was just loaded
+			setTitle(title);
+		}
+		catch (IOException e) {
+			Toolkit.getDefaultToolkit().beep(); // If the file didn't exist, yell at the user
+			JOptionPane.showMessageDialog(this, "Editor can't find the file called " + fileName);
+		}
+	}
+
 	public static void main(String[] args) {
-		new TextEditor();
+		new TextEditor(); // Main program to actually make and run the editor
 	}
 }
