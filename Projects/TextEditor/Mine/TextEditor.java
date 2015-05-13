@@ -46,7 +46,7 @@ public class TextEditor extends JFrame { // Extend JFrame because GUI
 		setJMenuBar(menuBar);
 		menuBar.add(file);
 
-		// Set mnemonics/accelerators for keyboard shortcuts, activated with a KEY or alt+KEY
+		// Set mnemonics/accelerators for keyboard shortcuts, activated with alt+KEY
 		file.setMnemonic(KeyEvent.VK_F);
 
 		openButton.setMnemonic(KeyEvent.VK_O);
@@ -71,9 +71,9 @@ public class TextEditor extends JFrame { // Extend JFrame because GUI
 
 		newButton.addActionListener(new ActionListener () {
 			public void actionPerformed(ActionEvent e) {
-				saveOld();
-				text.setText("");
-				title = "Untitled";
+				saveOld(); // If the user wants to make a new document, check to make sure old work is saved if necessary
+				text.setText(""); // Clear the textArea
+				title = "Untitled"; // Reset the title
 				setTitle(title);
 			}
 		});
@@ -104,7 +104,7 @@ public class TextEditor extends JFrame { // Extend JFrame because GUI
 		file.add(quit);
 
 		// Set up the file menu items
-		newButton.setIcon(new ImageIcon("images/new.gif"));
+		newButton.setIcon(new ImageIcon("images/new.gif"));  // Using icons is fun
 		openButton.setIcon(new ImageIcon("images/open.gif"));
 		save.setIcon(new ImageIcon("images/save.gif"));
 		quit.setIcon(new ImageIcon("images/quit.gif"));
@@ -113,7 +113,7 @@ public class TextEditor extends JFrame { // Extend JFrame because GUI
 
 		setDefaultCloseOperation(EXIT_ON_CLOSE); // Make window close if you close it
 		pack();
-		setVisible(true);
+		setVisible(true); // As opposed to invisible
 	}
 
 	private void saveFile(String fileName) {
