@@ -1,5 +1,8 @@
 ## My Java Text Editor
 
+### Installation and use
+Surprise, there's no installation! Simply download the TextEditor.jar file, or everything if you're curious, and run the TextEditor.jar file.
+
 ### Features
 * Ability to Open/Save files
 * Line numbering
