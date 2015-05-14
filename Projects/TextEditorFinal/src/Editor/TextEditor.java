@@ -1,26 +1,29 @@
-// Import everything
+package Editor;
+
+//Import everything
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import javax.swing.*;
 import javax.swing.text.*;
 import javax.swing.event.*;
+import org.fife.ui.rtextarea.*;
+import org.fife.ui.rsyntaxtextarea.*;
 
 public class TextEditor extends JFrame { // Extend JFrame because GUI
+	
+	// Added because of IED warning
+	private static final long serialVersionUID = 1L;
+	
+	// Create JPanel to put things in, using a BorderLayout
+	private JPanel cp = new JPanel(new BorderLayout());
 
-	// Set up text area, not a field, as a field only has one line
-	private JTextArea text = new JTextArea(30, 150);
+	// Set up text area, not a field, as a field only has one line, only I'm using the RSyntaxTextArea
+	// which is part of the neat library I imported above, which gives extra easy to use features
+	private RSyntaxTextArea text = new RSyntaxTextArea(30, 75);
 
 	// Set up text document name, for saving purposes
 	private String title = "Untitled";
-
-	// This is fun, I got this particular component from here:  { https://goo.gl/utdoBw }
-	// I actually tried making a seperate JTextArea lines, however it worked to some extent
-	// I was using getting the size of the document whenever the document was changed, and then setting
-	// the text in the lines JTextArea to a long list of numbers through a for loop and concatenation
-	// but the result would only work when typing out a new document, and would break whenever
-	// opening a file
-	private TextLineNumber lines = new TextLineNumber(text);
 
 	// Set up a file chooser to open existing files
 	// Apparently, the way to get the current working directory in Java is the following line:
@@ -31,11 +34,12 @@ public class TextEditor extends JFrame { // Extend JFrame because GUI
 
 	// Set up the font to use throughout the editor
 	// I'm using a monospaced font becuse yes.
-	private Font monospaced = new Font("Monaco", Font.PLAIN, 11);
+	private Font monospaced = new Font("Input Mono Compressed", Font.PLAIN, 12);
 
 	// Set up a scrollbar should it become necessary
-	private JScrollPane scroll = new JScrollPane(text, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-
+	//private JScrollPane scroll = new JScrollPane(text, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+	private RTextScrollPane scroll = new RTextScrollPane(text);
+	
 	// Set up the menu bar, and its items
 	private JMenuBar menuBar = new JMenuBar();
 
@@ -47,21 +51,21 @@ public class TextEditor extends JFrame { // Extend JFrame because GUI
 	private JMenuItem quit = new JMenuItem("Quit");
 
 	public TextEditor() {
+		
+		text.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA); // Since I work with Java, I'll use Java syntax highlighting
+	    //text.setCodeFoldingEnabled(true);  // Can't seem to get this to work
 
 		text.setFont(monospaced); // Set the font of the text area
-		add(scroll); // Add the scrollbar to the text area
+		
+		// Add line numbering to the side, for the authentic notepad++ feel
+		cp.add(scroll); // Add the scrollbar to the panel
 
-		// Using the TextLineNumber component a wonderful fellow wrote online, add line numbering to the side, for the authentic notepad++ feel
-		lines.setFont(monospaced);
-		scroll.setRowHeaderView(lines);
-
-		// Add my two menus to the menu bar
+		// Add my menu(s) to the menu bar
 		setJMenuBar(menuBar);
 		menuBar.add(file);
 
 		// Set mnemonics/accelerators for keyboard shortcuts, activated with alt+KEY
 		file.setMnemonic(KeyEvent.VK_F);
-
 		openButton.setMnemonic(KeyEvent.VK_O);
 		openButton.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.ALT_MASK));
 		newButton.setMnemonic(KeyEvent.VK_N);
@@ -121,9 +125,12 @@ public class TextEditor extends JFrame { // Extend JFrame because GUI
 		quit.setIcon(new ImageIcon("images/quit.gif"));
 
 		setTitle(title);
+		
+		setContentPane(cp);
 
 		setDefaultCloseOperation(EXIT_ON_CLOSE); // Make window close if you close it
 		pack();
+		setLocationRelativeTo(null);
 		setVisible(true); // As opposed to invisible
 	}
 
