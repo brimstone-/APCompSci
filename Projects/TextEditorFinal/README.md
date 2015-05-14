@@ -16,3 +16,4 @@ His repository can be found [here](https://github.com/bobbylight/RSyntaxTextArea
 
 ### TODO
 * Add tab functionality, so you can edit multiple files at once!
+* Add ability to toggle syntax highlighting
