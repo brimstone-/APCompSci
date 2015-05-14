@@ -43,7 +43,7 @@ public class TextEditor extends JFrame { // Extend JFrame because GUI
 
 	private	JMenu file = new JMenu("File");
 
-	private	JMenuItem newButton = new JMenuItem("New");
+	private JMenuItem newButton = new JMenuItem("New");
 	private JMenuItem openButton = new JMenuItem("Open");
 	private JMenuItem save = new JMenuItem("Save");
 	private JMenuItem quit = new JMenuItem("Quit");
