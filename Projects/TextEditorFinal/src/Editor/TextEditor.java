@@ -166,7 +166,7 @@ public class TextEditor extends JFrame { // Extend JFrame because GUI
 
 	public static void main(String[] args) {
 		new TextEditor(); // Main program to actually make and run the editor
-		System.setProperty("awt.useSystemAAFontSettings", "on"); // Anti-Alias fonts
+		System.setProperty("awt.useSystemAAFontSettings", "lcd"); // Anti-Alias fonts
 		System.setProperty("swing.aatext", "true");
 	}
 }
