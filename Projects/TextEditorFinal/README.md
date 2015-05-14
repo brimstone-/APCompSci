@@ -13,3 +13,6 @@ This was made with the help of an extra library called the RSyntaxTextArea
 made by GitHub user bobbylight.
 
 His repository can be found [here](https://github.com/bobbylight/RSyntaxTextArea).
+
+### TODO
+* Add tab functionality, so you can edit multiple files at once!
