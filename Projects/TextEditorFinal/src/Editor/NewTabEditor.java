@@ -242,13 +242,13 @@ class NewTabEditor implements Runnable { // Trying again, this time with tabs
 		edit.add(toggle);
 
 		// Icons are fun
-		openButton.setIcon(new ImageIcon("images/open.gif"));
-		newButton.setIcon(new ImageIcon("images/new.gif"));
-		closeButton.setIcon(new ImageIcon("images/close.gif"));
-		save.setIcon(new ImageIcon("images/save.gif"));
-		quit.setIcon(new ImageIcon("images/quit.gif"));
+		openButton.setIcon(new ImageIcon(getClass().getResource("images/open.gif")));
+		newButton.setIcon(new ImageIcon(getClass().getResource("images/new.gif")));
+		closeButton.setIcon(new ImageIcon(getClass().getResource("images/close.gif")));
+		save.setIcon(new ImageIcon(getClass().getResource("images/save.gif")));
+		quit.setIcon(new ImageIcon(getClass().getResource("images/quit.gif")));
 
-		toggle.setIcon(new ImageIcon("images/toggle.gif"));
+		toggle.setIcon(new ImageIcon(getClass().getResource("images/toggle.gif")));
 
 		// Add my menu(s) to the menu bar
 		menuBar.add(file);
