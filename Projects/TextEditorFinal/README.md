@@ -6,7 +6,8 @@ Surprise, there's no installation! Simply download the TextEditor.jar file, or e
 ### Features
 * Ability to Open/Save files
 * Line numbering
-* Some Java syntax highlighting
+* Some Java syntax highlighting (Toggleable)
+* Tabs!
 
 ### Notes
 This was made with the help of an extra library called the RSyntaxTextArea
@@ -14,5 +15,9 @@ made by GitHub user bobbylight.
 
 His repository can be found [here](https://github.com/bobbylight/RSyntaxTextArea).
 
+I also used Apache Commons IO, another wonderful library
+
+Their website is [here](http://commons.apache.org/proper/commons-io/).
+
 ### TODO
-* Add tab functionality, so you can edit multiple files at once!
+* All done, if you have any feature requests, let me know.  I can't garuntee I'll be capable of everything you think of though.
