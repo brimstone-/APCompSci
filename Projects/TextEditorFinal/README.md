@@ -3,6 +3,8 @@
 ### Installation and use
 Surprise, there's no installation! Simply download the TextEditor.jar file, or everything if you're curious, and run the TextEditor.jar file.
 
+#### [Screenshots](http://imgur.com/a/zow2H)
+
 ####[Download](https://mega.co.nz/#!fBwRVRAT!q2Zl7pxO2ZoAWJF3jbpY-9kT7RQzIIkqqfat54OYgq8)
 Last Updated: 5/18/15 @ 6:25 PM Central
 
