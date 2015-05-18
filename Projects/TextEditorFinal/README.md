@@ -10,17 +10,15 @@ Last Updated: 5/18/15 @ 6:25 PM Central
 * Ability to Open/Save files
 * Line numbering
 * Some Java syntax highlighting (Toggleable)
+* Set font size
 * Tabs!
 
 ### Notes
 This was made with the help of an extra library called the RSyntaxTextArea
 made by GitHub user bobbylight.
-
 His repository can be found [here](https://github.com/bobbylight/RSyntaxTextArea).
 
-I also make consult/reference to, but don't actually end up using Apache Commons IO, another cool library
-
-Their website is [here](http://commons.apache.org/proper/commons-io/).
+I also used a library called [JTatto](http://www.jtattoo.net/) for my theme
 
 ### TODO
 * Fix bugs if I discover them
