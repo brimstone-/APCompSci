@@ -13,8 +13,8 @@ import java.util.*;
 import org.fife.ui.rtextarea.*;
 import org.fife.ui.rsyntaxtextarea.*;
 
-// This is for better saving to file
-import org.apache.commons.io.*;
+// In case I happen to use Commons-IO
+//import org.apache.commons.io.*;
 
 // This library is for the theme I use
 import com.jtattoo.plaf.hifi.*;
@@ -102,14 +102,12 @@ class NewTabEditor implements Runnable { // Trying again, this time with tabs
 		text.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);  // This method is for the syntax
 																		// highlighting that comes
 																		// with RSyntaxTextAreas
-		
 		tabs.add(panel, "Untitled", numTabs++); // Add default tab
 
 		tabs.add(plusPanel, "+", numTabs++); // Here I add the add tab button
 		tabs.addChangeListener(listener); // Add my listener
 		tabs.addMouseListener(new MiddleClickListener());   // This mouse listener is for
 															// closing tabs with middle mouse click
-
 		// Set mnemonics/accelerators for keyboard shortcuts, activated with CTRL+KEY
 		// These are a lot of fun
 		file.setMnemonic(KeyEvent.VK_F);
@@ -127,7 +125,6 @@ class NewTabEditor implements Runnable { // Trying again, this time with tabs
 		edit.setMnemonic(KeyEvent.VK_E);
 		toggle.setMnemonic(KeyEvent.VK_T);
 		toggle.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_T, ActionEvent.CTRL_MASK));
-
 
 		// Listeners for the menu items
 		openButton.addActionListener(new ActionListener() {
@@ -284,12 +281,10 @@ class NewTabEditor implements Runnable { // Trying again, this time with tabs
 		// Good ol' GUI staples, setting behaviors, etc.
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().add(tabs, BorderLayout.CENTER);
-
 		frame.pack();
 		frame.setSize(new Dimension(800, 600));
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
-
 	}
 
 	private void addNewTab() {
@@ -371,19 +366,32 @@ class NewTabEditor implements Runnable { // Trying again, this time with tabs
 	}
 
 	private void saveFile(String fileName) { // Save is really just a save as, overwriting each time
+		FileWriter w = null;
 		try {
+			w = new FileWriter(fileName);
+			RSyntaxTextArea text = getTextArea(tabs.getSelectedIndex());
+			text.write(w);
+			
 			int index = tabs.getSelectedIndex();
 
-			RSyntaxTextArea text = getTextArea(tabs.getSelectedIndex());
-
-			String save = text.getText();
-			FileUtils.writeStringToFile(new File(fileName), save);    // However, commons-IO is totally awesome
+			//String save = text.getText();
+			//FileUtils.writeStringToFile(new File(fileName), save);
+			// Commons-IO is pretty convenient, but relies on the file being saved
+			// to be smaller than the maximum size of a String, so I've
+			// gone back to FileWriters
 
 			tabs.setTitleAt(index, fileName);
 		} catch (IOException e) {
 			Toolkit.getDefaultToolkit().beep(); // If the file didn't exist/user has no privilege, yell at the user
 			JOptionPane.showMessageDialog(tabs, "Editor can't write to the file called " + fileName + " either you don't have permission, or something else went wrong, like a velociraptor chewing on your motherboard.");
 			// Tempted to use, "Check your privilege."
+		} finally { // Better form to put the close() statement in a finally statement
+			try {
+				w.close();
+			} catch (Exception ex) {
+				Toolkit.getDefaultToolkit().beep();
+				JOptionPane.showMessageDialog(tabs, "FileWriter failed to close");
+			}
 		}
 	}
 
