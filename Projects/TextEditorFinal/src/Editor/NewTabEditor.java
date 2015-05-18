@@ -1,20 +1,16 @@
 package Editor;
 
+// Import ALL the libraries!
 import java.awt.*;
-
+import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.*;
-
-import java.awt.event.*;
 import java.io.*;
 import java.util.*;
 
 // These libraries are for the better and stronger versions of JTextArea and JScrollPane
 import org.fife.ui.rtextarea.*;
 import org.fife.ui.rsyntaxtextarea.*;
-
-// In case I happen to use Commons-IO
-//import org.apache.commons.io.*;
 
 // This library is for the theme I use
 import com.jtattoo.plaf.hifi.*;
@@ -28,9 +24,10 @@ class NewTabEditor implements Runnable { // Trying again, this time with tabs
 	private JPanel panel = new JPanel();
 	private JPanel plusPanel = new JPanel();
 
-	// I would declare my RSyntaxTextArea and RTextScrollPane here, but since I have to set the textArea's
-	// background before adding it to the scroll pane, I make them in my run() method
-
+	// Set up RSyntaxTextArea and RTextScrollPane null, as it works out better to instantiate them in the run() method
+	RSyntaxTextArea text = null;
+	RTextScrollPane scroll = null;
+	
 	// Set up menus and their items
 	private JMenuBar menuBar = new JMenuBar();
 	private JMenu file = new JMenu("File");
@@ -41,7 +38,12 @@ class NewTabEditor implements Runnable { // Trying again, this time with tabs
 	private JMenuItem save = new JMenuItem("Save");
 	private JMenuItem quit = new JMenuItem("Quit");
 	private JMenuItem toggle = new JMenuItem("Toggle Syntax Highlighting");
-
+	
+	// Set up tool bar with a size selector
+	private JToolBar tool = new JToolBar("Font Size Chooser");
+	private JLabel size = new JLabel("Font Size");
+	private JTextField field = new JTextField(5);
+	
 	// Listener for my add tab button
 	private ChangeListener listener;
 
@@ -49,7 +51,7 @@ class NewTabEditor implements Runnable { // Trying again, this time with tabs
 	private JFileChooser fileChooser = new JFileChooser(System.getProperty("user.dir"));
 
 	// Set up Monospaced font because those are best
-	private Font monospaced = new Font(Font.MONOSPACED, Font.PLAIN, 14);
+	private Font monospaced = new Font("Courier New", Font.PLAIN, 14);
 
 	// I need to keep track of the number of tabs, mostly because of the add tab button
 	private int numTabs = 0;
@@ -62,13 +64,13 @@ class NewTabEditor implements Runnable { // Trying again, this time with tabs
 
 	public static void main(String[] args) {
 		try {
+			System.setProperty("awt.useSystemAAFontSettings", "lcd"); // Anti-Alias fonts
+			System.setProperty("swing.aatext", "true");
 			Properties props = new Properties();
 			props.put("logoString", "");
 			HiFiLookAndFeel.setCurrentTheme(props);
 			UIManager.setLookAndFeel("com.jtattoo.plaf.hifi.HiFiLookAndFeel"); // Found some nice themes online
-			SwingUtilities.invokeLater(new NewTabEditor());  // invokeLater(new Runnable()) is nice because it lets me update the gui.
-			System.setProperty("awt.useSystemAAFontSettings", "lcd"); // Anti-Alias fonts
-			System.setProperty("swing.aatext", "true");
+			SwingUtilities.invokeLater(new NewTabEditor());  // invokeLater(new Runnable()) is nice because it lets me update the GUI
 		}
 		catch (Exception e) {
 			e.printStackTrace(); // If something goes wrong, tell me what and where, it's nice
@@ -88,26 +90,22 @@ class NewTabEditor implements Runnable { // Trying again, this time with tabs
 		
 		// TextArea and ScrollPane that contains it
 		// These are from the RSyntaxTextArea library
-		RSyntaxTextArea text = new RSyntaxTextArea();
-		text.setFont(monospaced); // Set font
-		text.setBackground(gray); // If I put these object declarations with the rest of them, I can't set the background
-							 // before adding the text area to the scroll pane, making my line numbers not have a gray background
-		RTextScrollPane scroll = new RTextScrollPane(text); // Add text area to the scroll pane and make the scroll pane in one go
+		text = myRSyntaxTextArea();		
+		scroll = new RTextScrollPane(text); // Add text area to the scroll pane and make the scroll pane in one go
 		
 		// These three lines are so that changing the window size dynamically resizes everything inside too
 		panel.setLayout(new BorderLayout()); // Using layouts => thumbsUp.jpg
-		panel.add(scroll, BorderLayout.CENTER); // Add the scrollpane to the panel
+		panel.add(scroll, BorderLayout.CENTER); // Add the scroll pane to the panel
 		panel.setBorder(BorderFactory.createEmptyBorder()); // Factories are about as annoying as Michael said they would be
 
-		text.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);	// This method is for the syntax
-															// highlighting that comes
-															// with RSyntaxTextAreas
+		// This method is for the syntax highlighting that comes with RSyntaxTextAreas
+		text.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
 		tabs.add(panel, "Untitled", numTabs++); // Add default tab
 
 		tabs.add(plusPanel, "+", numTabs++); // Here I add the add tab button
 		tabs.addChangeListener(listener); // Add my listener
-		tabs.addMouseListener(new MiddleClickListener());   // This mouse listener is for
-															// closing tabs with middle mouse click
+		tabs.addMouseListener(new MiddleClickListener());   // This mouse listener is for closing tabs with middle mouse click
+		
 		// Set mnemonics/accelerators for keyboard shortcuts, activated with CTRL+KEY
 		// These are a lot of fun
 		file.setMnemonic(KeyEvent.VK_F);
@@ -138,35 +136,17 @@ class NewTabEditor implements Runnable { // Trying again, this time with tabs
 			}
 		});
 
-		newButton.addActionListener(new ActionListener () { // This method is a bit ugly, but long story short, it adds a new tab from scratch
-															// I wanted to make a method that adds tabs, but as it turns out, it only got used once
-															// since the utility of a super generic tab only goes so far
-															// In most cases, every tab I make has something different about it
-															// the if (numTabs > 1) else structure is to fix the bug that occurs
-															// when the user makes a tab and the "+" is selected, or no tab at all
-															// or worse, ruining the functionality of the "+" button entirely
-															// I also had trouble with double tab creation
+		// The if (numTabs > 1) else structure is to fix the bug that occurs
+		// when the user makes a tab and the "+" is selected, or no tab at all
+		// or worse, ruining the functionality of the "+" button entirely
+		// I also had trouble with double tab creation
+		// This method used to be obscenely long, but making the newPanel() method cleaned things up a bit
+		newButton.addActionListener(new ActionListener () {
 			public void actionPerformed(ActionEvent e) {
 				if (numTabs > 1) {
 					int index = tabs.getSelectedIndex();
-					
-					JPanel panel = new JPanel();
-					panel.setLayout(new BorderLayout());
-
-					RSyntaxTextArea text = new RSyntaxTextArea();
-					text.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
-					text.setFont(monospaced);
-					text.setBackground(gray);
-
-					RTextScrollPane scroll = new RTextScrollPane(text);
-
-					panel.add(scroll, BorderLayout.CENTER);
-					panel.setBorder(BorderFactory.createEmptyBorder());
-
-					tabs.add(panel, "Untitled", index + 1);
-					
+					tabs.add(newPanel(), "Untitled", index + 1);
 					numTabs++;
-					
 					SwingUtilities.invokeLater(new Runnable() { // Here I update the GUI
 						@Override
 						public void run() {
@@ -174,23 +154,8 @@ class NewTabEditor implements Runnable { // Trying again, this time with tabs
 						}
 					});
 				} else {
-					JPanel panel = new JPanel();
-					panel.setLayout(new BorderLayout());
-
-					RSyntaxTextArea text = new RSyntaxTextArea();
-					text.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
-					text.setFont(monospaced);
-					text.setBackground(gray);
-
-					RTextScrollPane scroll = new RTextScrollPane(text);
-
-					panel.add(scroll, BorderLayout.CENTER);
-					panel.setBorder(BorderFactory.createEmptyBorder());
-
-					tabs.add(panel, "Untitled", 0);
-
+					tabs.add(newPanel(), "Untitled", 0);
 					numTabs++;
-
 					SwingUtilities.invokeLater(new Runnable() { // Here I update the GUI
 						@Override
 						public void run() {
@@ -206,11 +171,14 @@ class NewTabEditor implements Runnable { // Trying again, this time with tabs
 				int index = tabs.getSelectedIndex();
 				tabs.remove(index);
 				numTabs--;
-
 				SwingUtilities.invokeLater(new Runnable() { // Here I update the GUI
 					@Override
 					public void run() {
-						tabs.setSelectedIndex(index - 1);
+						if (index == 1) {
+							tabs.setSelectedIndex(0);
+						} else {
+							tabs.setSelectedIndex(index - 1);
+						}
 					}
 				});
 			}
@@ -218,7 +186,7 @@ class NewTabEditor implements Runnable { // Trying again, this time with tabs
 
 		save.addActionListener(new ActionListener() {
 			// My save button really just acts as a save as button,
-			// and overwrites the old file everytime
+			// and overwrites the old file every time
 			public void actionPerformed(ActionEvent e) {
 				if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION)
 					saveFile(fileChooser.getSelectedFile().getAbsolutePath(), fileChooser.getSelectedFile().getName());
@@ -249,6 +217,34 @@ class NewTabEditor implements Runnable { // Trying again, this time with tabs
 				});
 			}
 		});
+		
+		field.addActionListener(new ActionListener() { // Get the number from the text field and change the font size
+			public void actionPerformed(ActionEvent e) {
+				SwingUtilities.invokeLater(new Runnable() {
+					@Override
+					public void run() {
+						try {
+							int size = Integer.parseInt(field.getText());
+								if (size > 0 && size < 1639) {
+									RSyntaxTextArea text = getTextArea(tabs.getSelectedIndex());
+									Font newSize = new Font("Courier New", Font.PLAIN, size);
+									text.setFont(newSize);
+									field.setText(null);
+								}
+								else {
+									field.setText(null);
+									Toolkit.getDefaultToolkit().beep();
+									JOptionPane.showMessageDialog(tabs, "Please enter a integer value between 1 and 1638");
+								}
+						} catch (Exception e) {
+							field.setText(null);
+							Toolkit.getDefaultToolkit().beep();
+							JOptionPane.showMessageDialog(tabs, "Please enter a integer value between 1 and 1638");
+						}
+					}
+				});
+			}
+		});
 
 		// Add all the file menu items to the file menu
 		file.add(openButton);
@@ -269,7 +265,6 @@ class NewTabEditor implements Runnable { // Trying again, this time with tabs
 		closeButton.setIcon(new ImageIcon(getClass().getResource("images/close.gif")));
 		save.setIcon(new ImageIcon(getClass().getResource("images/save.gif")));
 		quit.setIcon(new ImageIcon(getClass().getResource("images/quit.gif")));
-
 		toggle.setIcon(new ImageIcon(getClass().getResource("images/toggle.gif")));
 
 		// Add my menu(s) to the menu bar
@@ -277,6 +272,14 @@ class NewTabEditor implements Runnable { // Trying again, this time with tabs
 		menuBar.add(edit);
 
 		frame.setJMenuBar(menuBar);
+		
+		// Add the label and text field to the tool bar		
+		tool.add(size);
+		tool.add(field);
+		
+		// Add the tool bar to the frame
+		Container contentPane = frame.getContentPane();
+	    contentPane.add(tool, BorderLayout.SOUTH);
 
 		// Good ol' GUI staples, setting behaviors, etc.
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -291,18 +294,7 @@ class NewTabEditor implements Runnable { // Trying again, this time with tabs
 		int index = numTabs - 1;
 		if (tabs.getSelectedIndex() == index) {
 
-			JPanel panel = new JPanel();
-			panel.setLayout(new BorderLayout());
-
-			RSyntaxTextArea text = new RSyntaxTextArea();
-			text.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
-			text.setFont(monospaced);
-			text.setBackground(gray);
-
-			RTextScrollPane scroll = new RTextScrollPane(text);
-
-			panel.add(scroll, BorderLayout.CENTER);
-			panel.setBorder(BorderFactory.createEmptyBorder());
+			JPanel panel = newPanel();
 
 			tabs.add(panel, "Untitled", index);
 			tabs.setMnemonicAt(index, index);
@@ -322,15 +314,8 @@ class NewTabEditor implements Runnable { // Trying again, this time with tabs
 			int index = tabs.getSelectedIndex();
 
 			FileReader r = new FileReader(filePath); // Create a FileReader
-			
-			// I was considering using commons-IO here too in order to read in files,
-			// but strings have maximum sizes and I don't want to deal with that
 
-			RSyntaxTextArea text = new RSyntaxTextArea(); // New TextArea
-
-			text.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA); // Set Font/Syntax
-			text.setFont(monospaced);
-			text.setBackground(gray);
+			RSyntaxTextArea text = myRSyntaxTextArea() ; // New TextArea
 
 			text.read(r, null); // Read the fileName into the reader object
 			r.close(); // Close the FileReader
@@ -343,8 +328,9 @@ class NewTabEditor implements Runnable { // Trying again, this time with tabs
 			panel.add(scroll, BorderLayout.CENTER); // This allows the ScrollPanel/TextArea to size with the Panel
 			panel.setBorder(BorderFactory.createEmptyBorder());
 			
-			if (numTabs < 2) {  // Weird bug where if user tries to open file when only the "+" exists, things break.
-								// This avoids those shenanigans, and gives me an excuse to use beep() again.
+			// Weird bug where if user tries to open file when only the "+" exists, things break
+			// This avoids those shenanigans, and gives me an excuse to use beep() again.
+			if (numTabs < 2) {
 				Toolkit.getDefaultToolkit().beep(); // If no text tabs exist, yell at the user
 				JOptionPane.showMessageDialog(tabs, "You need at least one tab open to open a file");
 			}
@@ -374,12 +360,6 @@ class NewTabEditor implements Runnable { // Trying again, this time with tabs
 			
 			int index = tabs.getSelectedIndex();
 
-			//String save = text.getText();
-			//FileUtils.writeStringToFile(new File(fileName), save);
-			// Commons-IO is pretty convenient, but relies on the file being saved
-			// to be smaller than the maximum size of a String, so I've
-			// gone back to FileWriters
-
 			tabs.setTitleAt(index, fileName);
 		} catch (IOException e) {
 			Toolkit.getDefaultToolkit().beep(); // If the file didn't exist/user has no privilege, yell at the user
@@ -389,7 +369,7 @@ class NewTabEditor implements Runnable { // Trying again, this time with tabs
 			try {
 				w.close();
 			} catch (Exception ex) {
-				Toolkit.getDefaultToolkit().beep();
+				Toolkit.getDefaultToolkit().beep(); // beep() beep()!
 				JOptionPane.showMessageDialog(tabs, "FileWriter failed to close");
 			}
 		}
@@ -403,7 +383,7 @@ class NewTabEditor implements Runnable { // Trying again, this time with tabs
 		}
 	}
 
-	private RSyntaxTextArea getTextArea(int index) { // Get the text area at whatever tab
+	private RSyntaxTextArea getTextArea(int index) { // Get the text area at the index'th tab
 		Container panel = (Container)tabs.getComponentAt(index);    // This container junk along with
 		Container scroll = (Container)panel.getComponents()[0];     // AWT creating Viewport s for things inside
 		Container port = (Container)(scroll.getComponents()[0]);    // of RTextScrollPane s took so long to figure out
@@ -415,6 +395,35 @@ class NewTabEditor implements Runnable { // Trying again, this time with tabs
 
 		RSyntaxTextArea text = (RSyntaxTextArea)realPort.getView();
 
+		return text;
+	}
+	
+	private JPanel newPanel() { // Method to set up a generic JPanel with myRSyntaxTextArea(), reducing amount of code
+		JPanel panel = new JPanel();
+		panel.setLayout(new BorderLayout());
+
+		RSyntaxTextArea text = myRSyntaxTextArea();
+		RTextScrollPane scroll = new RTextScrollPane(text);
+
+		panel.add(scroll, BorderLayout.CENTER);
+		panel.setBorder(BorderFactory.createEmptyBorder());
+		
+		return panel;
+	}
+	
+	public RSyntaxTextArea myRSyntaxTextArea() { // Method to set up a RSyntaxTextArea with anti-aliasing, reducing amount of code
+		RSyntaxTextArea text = new RSyntaxTextArea() {
+			private static final long serialVersionUID = -1630391918477711897L; // Compiler warned me to make this
+			@Override
+            public void paintComponent(Graphics g) {
+                Graphics2D graphics2d = (Graphics2D) g;
+                graphics2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                super.paintComponent(g);
+            }
+		};
+		text.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA); // Set Font/Syntax
+		text.setFont(monospaced);
+		text.setBackground(gray);
 		return text;
 	}
 
