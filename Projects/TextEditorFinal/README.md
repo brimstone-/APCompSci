@@ -14,9 +14,7 @@ Last Updated: 5/18/15 @ 6:25 PM Central
 * Tabs!
 
 ### Notes
-This was made with the help of an extra library called the RSyntaxTextArea
-made by GitHub user bobbylight.
-His repository can be found [here](https://github.com/bobbylight/RSyntaxTextArea).
+This was made with the help of an extra library called [RSyntaxTextArea](https://github.com/bobbylight/RSyntaxTextArea) made by GitHub user bobbylight.
 
 I also used a library called [JTatto](http://www.jtattoo.net/) for my theme
 
