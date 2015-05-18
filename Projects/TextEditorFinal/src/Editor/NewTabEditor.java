@@ -36,7 +36,7 @@ class NewTabEditor implements Runnable { // Trying again, this time with tabs
 	private JMenu file = new JMenu("File");
 	private JMenu edit = new JMenu("Edit");
 	private JMenuItem openButton = new JMenuItem("Open");
-	private	JMenuItem newButton = new JMenuItem("New Tab");
+	private JMenuItem newButton = new JMenuItem("New Tab");
 	private JMenuItem closeButton = new JMenuItem("Close Tab");
 	private JMenuItem save = new JMenuItem("Save");
 	private JMenuItem quit = new JMenuItem("Quit");
@@ -91,7 +91,7 @@ class NewTabEditor implements Runnable { // Trying again, this time with tabs
 		RSyntaxTextArea text = new RSyntaxTextArea();
 		text.setFont(monospaced); // Set font
 		text.setBackground(gray); // If I put these object declarations with the rest of them, I can't set the background
-								  // before adding the text area to the scroll pane, making my line numbers not have a gray background
+							 // before adding the text area to the scroll pane, making my line numbers not have a gray background
 		RTextScrollPane scroll = new RTextScrollPane(text); // Add text area to the scroll pane and make the scroll pane in one go
 		
 		// These three lines are so that changing the window size dynamically resizes everything inside too
@@ -99,9 +99,9 @@ class NewTabEditor implements Runnable { // Trying again, this time with tabs
 		panel.add(scroll, BorderLayout.CENTER); // Add the scrollpane to the panel
 		panel.setBorder(BorderFactory.createEmptyBorder()); // Factories are about as annoying as Michael said they would be
 
-		text.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);  // This method is for the syntax
-																		// highlighting that comes
-																		// with RSyntaxTextAreas
+		text.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);	// This method is for the syntax
+															// highlighting that comes
+															// with RSyntaxTextAreas
 		tabs.add(panel, "Untitled", numTabs++); // Add default tab
 
 		tabs.add(plusPanel, "+", numTabs++); // Here I add the add tab button
@@ -221,7 +221,7 @@ class NewTabEditor implements Runnable { // Trying again, this time with tabs
 			// and overwrites the old file everytime
 			public void actionPerformed(ActionEvent e) {
 				if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION)
-					saveFile(fileChooser.getSelectedFile().getAbsolutePath());
+					saveFile(fileChooser.getSelectedFile().getAbsolutePath(), fileChooser.getSelectedFile().getName());
 			}
 		});
 
@@ -365,10 +365,10 @@ class NewTabEditor implements Runnable { // Trying again, this time with tabs
 		}
 	}
 
-	private void saveFile(String fileName) { // Save is really just a save as, overwriting each time
+	private void saveFile(String filePath, String fileName) { // Save is really just a save as, overwriting each time
 		FileWriter w = null;
 		try {
-			w = new FileWriter(fileName);
+			w = new FileWriter(filePath);
 			RSyntaxTextArea text = getTextArea(tabs.getSelectedIndex());
 			text.write(w);
 			
@@ -398,7 +398,7 @@ class NewTabEditor implements Runnable { // Trying again, this time with tabs
 	private void saveOld() { // Prompt user to save on quit
 		if (JOptionPane.showConfirmDialog(tabs, "Would you like to save your work?", "Save", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 			if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
-				saveFile(fileChooser.getSelectedFile().getAbsolutePath()); // If the user quits, make sure they have saved all work
+				saveFile(fileChooser.getSelectedFile().getAbsolutePath(), fileChooser.getSelectedFile().getName()); // If the user quits, make sure they have saved all work
 			}
 		}
 	}
@@ -430,7 +430,7 @@ class NewTabEditor implements Runnable { // Trying again, this time with tabs
 					@Override
 					public void run() {
 						if (index > 0)
-							tabs.setSelectedIndex(index - 1);   // This mess of if statements fixes the problem where having two tabs
+							tabs.setSelectedIndex(index - 1);	// This mess of if statements fixes the problem where having two tabs
 																//open and closing the first one would make no tab be selected
 						else if (numTabs > 1)
 							tabs.setSelectedIndex(index);
