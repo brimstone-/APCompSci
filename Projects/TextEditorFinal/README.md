@@ -3,8 +3,8 @@
 ### Installation and use
 Surprise, there's no installation! Simply download the TextEditor.jar file, or everything if you're curious, and run the TextEditor.jar file.
 
-####[Download](https://mega.co.nz/#!yRozwYiT!zK3RaJPJVmLOIgo5MBwT8WnmP-vutP1TKYwDY2Eswyk)
-Last Updated: 5/18/15 @ 1:00 AM Central
+####[Download](https://mega.co.nz/#!vVAEXQpJ!ZkHXiKPn2dOu4lj8xmMYuNUqHmkIIE9Ws-7BWqimny8)
+Last Updated: 5/18/15 @ 1:10 AM Central
 
 ### Features
 * Ability to Open/Save files
