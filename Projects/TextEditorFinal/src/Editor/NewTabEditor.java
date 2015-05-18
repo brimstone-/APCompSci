@@ -7,6 +7,7 @@ import javax.swing.event.*;
 
 import java.awt.event.*;
 import java.io.*;
+import java.util.*;
 
 // These libraries are for the better and stronger versions of JTextArea and JScrollPane
 import org.fife.ui.rtextarea.*;
@@ -14,6 +15,9 @@ import org.fife.ui.rsyntaxtextarea.*;
 
 // This is for better saving to file
 import org.apache.commons.io.*;
+
+// This library is for the theme I use
+import com.jtattoo.plaf.hifi.*;
 
 class NewTabEditor implements Runnable { // Trying again, this time with tabs
 	// Declare all variables to be used
@@ -24,10 +28,8 @@ class NewTabEditor implements Runnable { // Trying again, this time with tabs
 	private JPanel panel = new JPanel();
 	private JPanel plusPanel = new JPanel();
 
-	// TextArea and ScrollPane that contains it
-	// These are from the RSyntaxTextArea library
-	private RSyntaxTextArea text = new RSyntaxTextArea();
-	private RTextScrollPane scroll = new RTextScrollPane(text);
+	// I would declare my RSyntaxTextArea and RTextScrollPane here, but since I have to set the textArea's
+	// background before adding it to the scroll pane, I make them in my run() method
 
 	// Set up menus and their items
 	private JMenuBar menuBar = new JMenuBar();
@@ -54,11 +56,23 @@ class NewTabEditor implements Runnable { // Trying again, this time with tabs
 
 	// For my toggle highlighting menu item
 	private boolean highlight = true;
+	
+	// Color as the background
+	Color gray = new Color(200,200,200);
 
 	public static void main(String[] args) {
-		SwingUtilities.invokeLater(new NewTabEditor());  // invokeLater(new Runnable()) is nice because it lets me update the gui.
-		System.setProperty("awt.useSystemAAFontSettings", "lcd"); // Anti-Alias fonts
-		System.setProperty("swing.aatext", "true");
+		try {
+			Properties props = new Properties();
+			props.put("logoString", "");
+			HiFiLookAndFeel.setCurrentTheme(props);
+			UIManager.setLookAndFeel("com.jtattoo.plaf.hifi.HiFiLookAndFeel"); // Found some nice themes online
+			SwingUtilities.invokeLater(new NewTabEditor());  // invokeLater(new Runnable()) is nice because it lets me update the gui.
+			System.setProperty("awt.useSystemAAFontSettings", "lcd"); // Anti-Alias fonts
+			System.setProperty("swing.aatext", "true");
+		}
+		catch (Exception e) {
+			e.printStackTrace(); // If something goes wrong, tell me what and where, it's nice
+		}
 	}
 
 	public void run() {
@@ -71,15 +85,24 @@ class NewTabEditor implements Runnable { // Trying again, this time with tabs
 		};
 
 		// Time to make all my declarations actual objects
-		panel.setLayout(new BorderLayout());
-		panel.add(scroll, BorderLayout.CENTER);
-		panel.setBorder(BorderFactory.createEmptyBorder());
+		
+		// TextArea and ScrollPane that contains it
+		// These are from the RSyntaxTextArea library
+		RSyntaxTextArea text = new RSyntaxTextArea();
+		text.setFont(monospaced); // Set font
+		text.setBackground(gray); // If I put these object declarations with the rest of them, I can't set the background
+								  // before adding the text area to the scroll pane, making my line numbers not have a gray background
+		RTextScrollPane scroll = new RTextScrollPane(text); // Add text area to the scroll pane and make the scroll pane in one go
+		
+		// These three lines are so that changing the window size dynamically resizes everything inside too
+		panel.setLayout(new BorderLayout()); // Using layouts => thumbsUp.jpg
+		panel.add(scroll, BorderLayout.CENTER); // Add the scrollpane to the panel
+		panel.setBorder(BorderFactory.createEmptyBorder()); // Factories are about as annoying as Michael said they would be
 
 		text.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);  // This method is for the syntax
 																		// highlighting that comes
 																		// with RSyntaxTextAreas
-		text.setFont(monospaced); // Set font
-
+		
 		tabs.add(panel, "Untitled", numTabs++); // Add default tab
 
 		tabs.add(plusPanel, "+", numTabs++); // Here I add the add tab button
@@ -136,6 +159,7 @@ class NewTabEditor implements Runnable { // Trying again, this time with tabs
 					RSyntaxTextArea text = new RSyntaxTextArea();
 					text.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
 					text.setFont(monospaced);
+					text.setBackground(gray);
 
 					RTextScrollPane scroll = new RTextScrollPane(text);
 
@@ -159,6 +183,7 @@ class NewTabEditor implements Runnable { // Trying again, this time with tabs
 					RSyntaxTextArea text = new RSyntaxTextArea();
 					text.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
 					text.setFont(monospaced);
+					text.setBackground(gray);
 
 					RTextScrollPane scroll = new RTextScrollPane(text);
 
@@ -215,7 +240,7 @@ class NewTabEditor implements Runnable { // Trying again, this time with tabs
 				SwingUtilities.invokeLater(new Runnable() {// Here I update the GUI, thanks invokeLater!
 					@Override // I underestimated the use of @Override until now
 					public void run() {
-						RSyntaxTextArea text = getText(tabs.getSelectedIndex());
+						RSyntaxTextArea text = getTextArea(tabs.getSelectedIndex());
 						if (highlight) { // If highlighting is on, turn it off
 							text.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_NONE);
 							highlight = !highlight;
@@ -277,6 +302,7 @@ class NewTabEditor implements Runnable { // Trying again, this time with tabs
 			RSyntaxTextArea text = new RSyntaxTextArea();
 			text.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
 			text.setFont(monospaced);
+			text.setBackground(gray);
 
 			RTextScrollPane scroll = new RTextScrollPane(text);
 
@@ -309,6 +335,7 @@ class NewTabEditor implements Runnable { // Trying again, this time with tabs
 
 			text.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA); // Set Font/Syntax
 			text.setFont(monospaced);
+			text.setBackground(gray);
 
 			text.read(r, null); // Read the fileName into the reader object
 			r.close(); // Close the FileReader
@@ -347,7 +374,7 @@ class NewTabEditor implements Runnable { // Trying again, this time with tabs
 		try {
 			int index = tabs.getSelectedIndex();
 
-			RSyntaxTextArea text = getText(tabs.getSelectedIndex());
+			RSyntaxTextArea text = getTextArea(tabs.getSelectedIndex());
 
 			String save = text.getText();
 			FileUtils.writeStringToFile(new File(fileName), save);    // However, commons-IO is totally awesome
@@ -360,7 +387,7 @@ class NewTabEditor implements Runnable { // Trying again, this time with tabs
 		}
 	}
 
-	private void saveOld() {
+	private void saveOld() { // Prompt user to save on quit
 		if (JOptionPane.showConfirmDialog(tabs, "Would you like to save your work?", "Save", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 			if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
 				saveFile(fileChooser.getSelectedFile().getAbsolutePath()); // If the user quits, make sure they have saved all work
@@ -368,7 +395,7 @@ class NewTabEditor implements Runnable { // Trying again, this time with tabs
 		}
 	}
 
-	private RSyntaxTextArea getText(int index) {
+	private RSyntaxTextArea getTextArea(int index) { // Get the text area at whatever tab
 		Container panel = (Container)tabs.getComponentAt(index);    // This container junk along with
 		Container scroll = (Container)panel.getComponents()[0];     // AWT creating Viewport s for things inside
 		Container port = (Container)(scroll.getComponents()[0]);    // of RTextScrollPane s took so long to figure out
