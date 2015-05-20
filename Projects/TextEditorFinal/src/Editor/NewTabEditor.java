@@ -124,127 +124,7 @@ class NewTabEditor implements Runnable { // Trying again, this time with tabs
 		toggle.setMnemonic(KeyEvent.VK_T);
 		toggle.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_T, ActionEvent.CTRL_MASK));
 
-		// Listeners for the menu items
-		openButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-					readFile(fileChooser.getSelectedFile().getAbsolutePath(), fileChooser.getSelectedFile().getName());
-					// Use the file reader to get the selected file,
-					// and then find it's full directory path.
-					// This is then given to the readFile method.
-				}
-			}
-		});
-
-		// The if (numTabs > 1) else structure is to fix the bug that occurs
-		// when the user makes a tab and the "+" is selected, or no tab at all
-		// or worse, ruining the functionality of the "+" button entirely
-		// I also had trouble with double tab creation
-		// This method used to be obscenely long, but making the newPanel() method cleaned things up a bit
-		newButton.addActionListener(new ActionListener () {
-			public void actionPerformed(ActionEvent e) {
-				if (numTabs > 1) {
-					int index = tabs.getSelectedIndex();
-					tabs.add(newPanel(), "Untitled", index + 1);
-					numTabs++;
-					SwingUtilities.invokeLater(new Runnable() { // Here I update the GUI
-						@Override
-						public void run() {
-							tabs.setSelectedIndex(index + 1);
-						}
-					});
-				} else {
-					tabs.add(newPanel(), "Untitled", 0);
-					numTabs++;
-					SwingUtilities.invokeLater(new Runnable() { // Here I update the GUI
-						@Override
-						public void run() {
-							tabs.setSelectedIndex(numTabs - 2);
-						}
-					});
-				}
-			}
-		});
-
-		closeButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				int index = tabs.getSelectedIndex();
-				tabs.remove(index);
-				numTabs--;
-				SwingUtilities.invokeLater(new Runnable() { // Here I update the GUI
-					@Override
-					public void run() {
-						if (index == 1) {
-							tabs.setSelectedIndex(0);
-						} else {
-							tabs.setSelectedIndex(index - 1);
-						}
-					}
-				});
-			}
-		});
-
-		save.addActionListener(new ActionListener() {
-			// My save button really just acts as a save as button,
-			// and overwrites the old file every time
-			public void actionPerformed(ActionEvent e) {
-				if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION)
-					saveFile(fileChooser.getSelectedFile().getAbsolutePath(), fileChooser.getSelectedFile().getName());
-			}
-		});
-
-		quit.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				saveOld(); // Just in case the user forgot to save
-				System.exit(0); // Close program
-			}
-		});
-
-		toggle.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				SwingUtilities.invokeLater(new Runnable() {// Here I update the GUI, thanks invokeLater!
-					@Override // I underestimated the use of @Override until now
-					public void run() {
-						RSyntaxTextArea text = getTextArea(tabs.getSelectedIndex());
-						if (highlight) { // If highlighting is on, turn it off
-							text.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_NONE);
-							highlight = !highlight;
-						} else { // Otherwise turn it on
-							text.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
-							highlight = !highlight;
-						}
-					}
-				});
-			}
-		});
-		
-		field.addActionListener(new ActionListener() { // Get the number from the text field and change the font size
-			public void actionPerformed(ActionEvent e) {
-				SwingUtilities.invokeLater(new Runnable() {
-					@Override
-					public void run() {
-						try {
-							int size = Integer.parseInt(field.getText());
-								if (size > 0 && size < 1639) {
-									RSyntaxTextArea text = getTextArea(tabs.getSelectedIndex());
-									Font newSize = new Font("Courier New", Font.PLAIN, size);
-									text.setFont(newSize);
-									field.setText(null);
-								}
-								else {
-									field.setText(null);
-									Toolkit.getDefaultToolkit().beep();
-									JOptionPane.showMessageDialog(tabs, "Please enter a integer value between 1 and 1638");
-								}
-						} catch (Exception e) {
-							field.setText(null);
-							Toolkit.getDefaultToolkit().beep();
-							JOptionPane.showMessageDialog(tabs, "Please enter a integer value between 1 and 1638");
-						}
-					}
-				});
-			}
-		});
+		addListeners();
 
 		// Add all the file menu items to the file menu
 		file.add(openButton);
@@ -425,6 +305,130 @@ class NewTabEditor implements Runnable { // Trying again, this time with tabs
 		text.setFont(monospaced);
 		text.setBackground(gray);
 		return text;
+	}
+	
+	public void addListeners() {
+		// Listeners for the menu items
+		openButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+					readFile(fileChooser.getSelectedFile().getAbsolutePath(), fileChooser.getSelectedFile().getName());
+					// Use the file reader to get the selected file,
+					// and then find it's full directory path.
+					// This is then given to the readFile method.
+				}
+			}
+		});
+
+		// The if (numTabs > 1) else structure is to fix the bug that occurs
+		// when the user makes a tab and the "+" is selected, or no tab at all
+		// or worse, ruining the functionality of the "+" button entirely
+		// I also had trouble with double tab creation
+		// This method used to be obscenely long, but making the newPanel() method cleaned things up a bit
+		newButton.addActionListener(new ActionListener () {
+			public void actionPerformed(ActionEvent e) {
+				if (numTabs > 1) {
+					int index = tabs.getSelectedIndex();
+					tabs.add(newPanel(), "Untitled", index + 1);
+					numTabs++;
+					SwingUtilities.invokeLater(new Runnable() { // Here I update the GUI
+						@Override
+						public void run() {
+							tabs.setSelectedIndex(index + 1);
+						}
+					});
+				} else {
+					tabs.add(newPanel(), "Untitled", 0);
+					numTabs++;
+					SwingUtilities.invokeLater(new Runnable() { // Here I update the GUI
+						@Override
+						public void run() {
+							tabs.setSelectedIndex(numTabs - 2);
+						}
+					});
+				}
+			}
+		});
+
+		closeButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int index = tabs.getSelectedIndex();
+				tabs.remove(index);
+				numTabs--;
+				SwingUtilities.invokeLater(new Runnable() { // Here I update the GUI
+					@Override
+					public void run() {
+						if (numTabs == 2 && index == 0) {
+							tabs.setSelectedIndex(0);
+						} else {
+							tabs.setSelectedIndex(index - 1);
+						}
+					}
+				});
+			}
+		});
+
+		save.addActionListener(new ActionListener() {
+			// My save button really just acts as a save as button,
+			// and overwrites the old file every time
+			public void actionPerformed(ActionEvent e) {
+				if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION)
+					saveFile(fileChooser.getSelectedFile().getAbsolutePath(), fileChooser.getSelectedFile().getName());
+			}
+		});
+
+		quit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				saveOld(); // Just in case the user forgot to save
+				System.exit(0); // Close program
+			}
+		});
+
+		toggle.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				SwingUtilities.invokeLater(new Runnable() {// Here I update the GUI, thanks invokeLater!
+					@Override // I underestimated the use of @Override until now
+					public void run() {
+						RSyntaxTextArea text = getTextArea(tabs.getSelectedIndex());
+						if (highlight) { // If highlighting is on, turn it off
+							text.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_NONE);
+							highlight = !highlight;
+						} else { // Otherwise turn it on
+							text.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
+							highlight = !highlight;
+						}
+					}
+				});
+			}
+		});
+		
+		field.addActionListener(new ActionListener() { // Get the number from the text field and change the font size
+			public void actionPerformed(ActionEvent e) {
+				SwingUtilities.invokeLater(new Runnable() {
+					@Override
+					public void run() {
+						try {
+							int size = Integer.parseInt(field.getText());
+								if (size > 0 && size < 1639) {
+									RSyntaxTextArea text = getTextArea(tabs.getSelectedIndex());
+									Font newSize = new Font("Courier New", Font.PLAIN, size);
+									text.setFont(newSize);
+									field.setText(null);
+								}
+								else {
+									field.setText(null);
+									Toolkit.getDefaultToolkit().beep();
+									JOptionPane.showMessageDialog(tabs, "Please enter a integer value between 1 and 1638");
+								}
+						} catch (Exception e) {
+							field.setText(null);
+							Toolkit.getDefaultToolkit().beep();
+							JOptionPane.showMessageDialog(tabs, "Please enter a integer value between 1 and 1638");
+						}
+					}
+				});
+			}
+		});
 	}
 
 	public class MiddleClickListener extends MouseAdapter { // Listener for the closing tab clicking action
