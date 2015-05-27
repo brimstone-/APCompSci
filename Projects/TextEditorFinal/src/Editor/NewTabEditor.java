@@ -1,6 +1,7 @@
 package Editor;
 
 // Import ALL the libraries!
+// awt and swing are for guis, io for reading files
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -47,7 +48,8 @@ class NewTabEditor implements Runnable { // Trying again, this time with tabs
 	// Listener for my add tab button
 	private ChangeListener listener;
 
-	// File Chooser
+	// File Chooser, used to open the file choosing dialogue
+	// System.getProperty("user.dir") gets the current directory the program was opened in
 	private JFileChooser fileChooser = new JFileChooser(System.getProperty("user.dir"));
 
 	// Set up Monospaced font because those are best
@@ -59,21 +61,23 @@ class NewTabEditor implements Runnable { // Trying again, this time with tabs
 	// For my toggle highlighting menu item
 	private boolean highlight = true;
 	
-	// Color as the background
+	// Color for the background
 	Color gray = new Color(200,200,200);
 
 	public static void main(String[] args) {
 		try {
 			System.setProperty("awt.useSystemAAFontSettings", "lcd"); // Anti-Alias fonts
 			System.setProperty("swing.aatext", "true");
-			Properties props = new Properties();
-			props.put("logoString", "");
-			HiFiLookAndFeel.setCurrentTheme(props);
+			Properties props = new Properties(); // Set the text labeling the drop down menus
+			props.put("logoString", ""); // In this case, I made them empty
+			HiFiLookAndFeel.setCurrentTheme(props); // Using the HiFiLookAndFeel from JTatto
 			UIManager.setLookAndFeel("com.jtattoo.plaf.hifi.HiFiLookAndFeel"); // Found some nice themes online
 			SwingUtilities.invokeLater(new NewTabEditor());  // invokeLater(new Runnable()) is nice because it lets me update the GUI
 		}
 		catch (Exception e) {
-			e.printStackTrace(); // If something goes wrong, tell me what and where, it's nice
+			e.printStackTrace();
+			// If something goes wrong, tell me what and where, it's nice
+			// Later Idan showed the debugger, and I wish I knew about it before
 		}
 	}
 
@@ -124,6 +128,8 @@ class NewTabEditor implements Runnable { // Trying again, this time with tabs
 		toggle.setMnemonic(KeyEvent.VK_T);
 		toggle.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_T, ActionEvent.CTRL_MASK));
 
+		// This method I made because having a billion listeners being added at here took up
+		// a lot of space and I got tired of scrolling
 		addListeners();
 
 		// Add all the file menu items to the file menu
@@ -159,7 +165,7 @@ class NewTabEditor implements Runnable { // Trying again, this time with tabs
 		
 		// Add the tool bar to the frame
 		Container contentPane = frame.getContentPane();
-	    contentPane.add(tool, BorderLayout.SOUTH);
+	    	contentPane.add(tool, BorderLayout.SOUTH);
 
 		// Good ol' GUI staples, setting behaviors, etc.
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -170,6 +176,7 @@ class NewTabEditor implements Runnable { // Trying again, this time with tabs
 		frame.setVisible(true);
 	}
 
+	// This method simply creates and adds an blank tab to the editor
 	private void addNewTab() {
 		int index = numTabs - 1;
 		if (tabs.getSelectedIndex() == index) {
@@ -179,6 +186,7 @@ class NewTabEditor implements Runnable { // Trying again, this time with tabs
 			tabs.add(panel, "Untitled", index);
 			tabs.setMnemonicAt(index, index);
 
+			// This section is so that I can update the GUI of the already running program
 			SwingUtilities.invokeLater(new Runnable() {
 				@Override
 				public void run() {
@@ -189,6 +197,7 @@ class NewTabEditor implements Runnable { // Trying again, this time with tabs
 		}
 	}
 
+	// This method reads in the a file and then adds a new tab with the file in it
 	private void readFile(String filePath, String fileName) {
 		try {
 			int index = tabs.getSelectedIndex();
@@ -265,12 +274,13 @@ class NewTabEditor implements Runnable { // Trying again, this time with tabs
 
 	private RSyntaxTextArea getTextArea(int index) { // Get the text area at the index'th tab
 		Container panel = (Container)tabs.getComponentAt(index);    // This container junk along with
-		Container scroll = (Container)panel.getComponents()[0];     // AWT creating Viewport s for things inside
-		Container port = (Container)(scroll.getComponents()[0]);    // of RTextScrollPane s took so long to figure out
-																	// it is seriously not funny
-		// Hooray for casting though								// I had to keep incorrectly casting things
-																	// so the error messages would tell me these things'
-																	// "True Identity", awful experience
+		Container scroll = (Container)panel.getComponents()[0];     // AWT creating Viewport is for things inside
+		Container port = (Container)(scroll.getComponents()[0]);    // of RTextScrollPane. This took so long to figure out
+									    // it is seriously not funny
+		// Hooray for casting though				    // I had to keep incorrectly casting things
+									    // so the error messages would tell me these things'
+									    // "True Identity", awful experience, I'm sure there's a better way
+									    // I refuse to believe that it's always this ugly
 		JViewport realPort = (JViewport)port;
 
 		RSyntaxTextArea text = (RSyntaxTextArea)realPort.getView();
@@ -278,7 +288,9 @@ class NewTabEditor implements Runnable { // Trying again, this time with tabs
 		return text;
 	}
 	
-	private JPanel newPanel() { // Method to set up a generic JPanel with myRSyntaxTextArea(), reducing amount of code
+	// Method to set up a generic JPanel with myRSyntaxTextArea(), reducing amount of code
+	// I need a new JPanel with all the frills of the RSyntaxTextArea and RTextScrollPane quite often, hence this method
+	private JPanel newPanel() {
 		JPanel panel = new JPanel();
 		panel.setLayout(new BorderLayout());
 
@@ -291,15 +303,17 @@ class NewTabEditor implements Runnable { // Trying again, this time with tabs
 		return panel;
 	}
 	
-	public RSyntaxTextArea myRSyntaxTextArea() { // Method to set up a RSyntaxTextArea with anti-aliasing, reducing amount of code
+	// Method to set up a RSyntaxTextArea with anti-aliasing, reducing amount of code
+	// Both a helper method for the JPanel method, and useful in its own right
+	public RSyntaxTextArea myRSyntaxTextArea() {
 		RSyntaxTextArea text = new RSyntaxTextArea() {
 			private static final long serialVersionUID = -1630391918477711897L; // Compiler warned me to make this
 			@Override
-            public void paintComponent(Graphics g) {
-                Graphics2D graphics2d = (Graphics2D) g;
-                graphics2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                super.paintComponent(g);
-            }
+        		public void paintComponent(Graphics g) {
+                		Graphics2D graphics2d = (Graphics2D) g;
+                		graphics2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                		super.paintComponent(g);
+            		}
 		};
 		text.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA); // Set Font/Syntax
 		text.setFont(monospaced);
@@ -307,6 +321,8 @@ class NewTabEditor implements Runnable { // Trying again, this time with tabs
 		return text;
 	}
 	
+	// I made this huge method just so I could put all the listeners out of the way where I didn't have to see them
+	// Also made code folding nicer in my IDE
 	public void addListeners() {
 		// Listeners for the menu items
 		openButton.addActionListener(new ActionListener() {
@@ -402,14 +418,17 @@ class NewTabEditor implements Runnable { // Trying again, this time with tabs
 			}
 		});
 		
-		field.addActionListener(new ActionListener() { // Get the number from the text field and change the font size
+		field.addActionListener(new ActionListener() {
+		// Get the number from the text field and change the font size
+		// There needs to be done with checks with this because once you allow the user to input arbitrary values
+		// Things tend to go easily wrong
 			public void actionPerformed(ActionEvent e) {
 				SwingUtilities.invokeLater(new Runnable() {
 					@Override
 					public void run() {
 						try {
 							int size = Integer.parseInt(field.getText());
-								if (size > 0 && size < 1639) {
+								if (size > 0 && size < 1639) { // 1638 is the max font Microsoft Word 2010 allows
 									RSyntaxTextArea text = getTextArea(tabs.getSelectedIndex());
 									Font newSize = new Font("Courier New", Font.PLAIN, size);
 									text.setFont(newSize);
@@ -441,10 +460,11 @@ class NewTabEditor implements Runnable { // Trying again, this time with tabs
 
 				SwingUtilities.invokeLater(new Runnable() { // Here I update the GUI
 					@Override
+					// This mess of if statements fixes the problem where having two tabs
+					//open and closing the first one would make no tab be selected
 					public void run() {
 						if (index > 0)
-							tabs.setSelectedIndex(index - 1);	// This mess of if statements fixes the problem where having two tabs
-																//open and closing the first one would make no tab be selected
+							tabs.setSelectedIndex(index - 1);
 						else if (numTabs > 1)
 							tabs.setSelectedIndex(index);
 						else
