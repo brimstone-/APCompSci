@@ -62,7 +62,7 @@ class NewTabEditor implements Runnable { // Trying again, this time with tabs
 	private boolean highlight = true;
 	
 	// Color for the background
-	Color gray = new Color(200,200,200);
+	private Color gray = new Color(200,200,200);
 
 	public static void main(String[] args) {
 		try {
