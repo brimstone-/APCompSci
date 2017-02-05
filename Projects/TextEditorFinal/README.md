@@ -5,7 +5,7 @@ Surprise, there's no installation! Simply download the TextEditor.jar file, or e
 
 #### [Screenshots](http://imgur.com/a/zow2H)
 
-####[Download](https://mega.co.nz/#!nAwWhJaB!Ie2qw08OJ4x84izGtG5DTvDTdHNkLq5rk8mcyPMxxvY)
+####[Download](https://mega.nz/#!7cIDnAZI!F_PIpodJUgeD491hrMwNUhstTorgr6EskxyRe4BVWlM)
 Last Updated: 5/19/15 @ 10:00 PM Central
 
 ### Features
